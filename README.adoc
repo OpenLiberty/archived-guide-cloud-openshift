@@ -1,8 +1,4 @@
-// As you start writing your guide, keep everything between BEGIN and END in the README.adoc, 
-// meaning delete anything else that is above or below the BEGIN and END lines inclusively. 
-// Also, please delete any instructions that begin with //--** after you read them
-// ----------- BEGIN -----------
-//--** INSTRUCTION: The copyright statement must appear at the top of the file
+//
 // Copyright (c) 2019 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
@@ -11,305 +7,208 @@
 // Contributors:
 //     IBM Corporation
 //
+//FIX: This whole block of metadata
+:projectid: cloud-openshift
 :page-layout: guide-multipane
-//--** INSTRUCTION: The project id is the part of the git repository after the guide- and must be specified
-//--** :projectid: github repo name without the `guide-` prefix
-:projectid: template
-//--** INSTRUCTION: Provide an estimate of how long the guide will take to go through.
-:page-duration: 15 minutes
-//--** INSTRUCTION: Provide the date when the guide is published.  Format is YYYY-MM-DD.
-:page-releasedate: 2019-03-11
-//--** INSTRUCTION: Provide a description for the guide index page.
-:page-description: Learn how to create a todo list API as a REST service using JAX-RS, and Open Liberty.
-:guide-author: Open Liberty
-//--** INSTUCTION: Please provide relevant tags, try to avoid inventing new ones.
-//--** Use some of "MicroProfile, Maven, Docker, Kubernetes, Gradle, Java EE, Security".
-:page-tags: ['Java EE']
-//--** INSTRUCTION: Specify the unique name of the guide that is used in the permalink.
-:page-related-guides: ['cdi-intro', 'rest-intro']
-//--** INSTRUCTION: Set 'basic', 'microprofile', 'none'
-:page-guide-category: microprofile
-//--** INSTRUCTION: Places the guide into the essentials section of a category
-//--** Requirement: Must define :page-guide-category:
-:page-essential: false
-//--** INSTRUCTION: Number is used to sort guide from left (lowest number) to right (highest number) in
-//--** the essentials section of a category
-//--** Requirement: Must have :page-essential: true
-:page-essential-order: 3
-//--** INSTRUCTION: Specify the slug in the website. This must be unique.
+:page-duration: 45 minutes 
+:page-releasedate: 2019-05-29
+:page-description: Explore how to deploy microservices to Red Hat OpenShift's public cloud. //NOTE: Same description as below
+:page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
-//--** INSTRUCTION: Source the common page elements, clone `git@github.com:OpenLiberty/guides-common.git`.
-:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
-//--** INSTRUCTION: Update the SEO title for the guide
-:page-seo-title: Creating a REST service
-//--** INSTRUCTION: Update the SEO description for the guide
-:page-seo-description: Find out how to create a REST service on Open Liberty
-//--** INSTRUCTION: You can't have a new line between the attributes and the title.
-= Title of guide, starting with a gerund (Creating, Administering, and so on)
-//--** EXAMPLE: Creating a REST API for a todo list application
+:page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
+:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master 
+:source-highlighter: prettify
+:page-seo-title: Deploying microservices to Openshift 
+:page-seo-description: A tutorial on how to deploy microservices to Amazon EKS using Amazon Elastic Container Registry (ECR) as a private container registry. 
+:guide-author: Open Liberty
+= Deploying microservices to OpenShift Online
 
 [.hidden]
-NOTE: This repository contains the guide documentation source. To view the guide in published form,
-view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
+NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website^].
 
-//--** Start the introduction with "You'll explore how to..." or something similarly catchy.
-//--** Write no more than two sentences, with meaningful information on what the user can accomplish
-//--** with this guide.
-//--** Do not start the introduction with "This guide...".
-//--** EXAMPLE: Learn how to create a todo list API as a REST service using JAX-RS, CDI, and Open Liberty.
+Explore how to deploy microservices to Red Hat OpenShift's public cloud. //NOTE: Same description as above
 
-
-
-
-== What you'll learn
-
-//--** Write about what the user will learn in a meaningful intro paragraph.
-//--** Follow the intro paragraph with more details of what the user will learn, but still keep it brief.
-//--** See the REST guide at as an exemplar guide.
-//--** https://openliberty.io/guides/rest-intro.html
-//--** https://github.com/OpenLiberty/guide-rest-intro
-
-// EXAMPLE:
-// =============================================================================
-You'll learn how to create a todo list microservice using JAX-RS, CDI and Open Liberty.
-You will use Maven throughout the guide to build the microservice and deploy it
-to run on the Open Liberty application server.
-
-=== What is JAX-RS
-* Add a brief description of JAX-RS
-
-=== What is CDI
-* Add a brief description of CDI
-
-=== What is Open Liberty
-* Add brief description of Open Liberty, where applicable
-
-Brief description of the todo list micrioservice
-// =============================================================================
+:kube: Kubernetes
+:hashtag: #
+:win: WINDOWS
+:mac: MAC
+:linux: LINUX
+:system-api: http://[hostname]:31000/system/properties
+:inventory-api: http://[hostname]:32000/inventory/systems
 
 
+// =================================================================================================
+// Introduction
+// =================================================================================================
 
-///////////////////////////
-// Getting started
-///////////////////////////
+== What you'll learn 
 
-//--** Add this getting started section to your guide if it is applicable.
-//--** Use the following include to pull in the git clone instructions from the guides-common repo.
+You will learn how to deploy two microservices in Open Liberty containers to a {kube}
+cluster using OpenShift Online, Red Hat's public cloud platform.
 
-[role='command']
+Kubernetes is an open source container orchestrator that automates many tasks involved in 
+deploying, managing, and scaling containerized applications. If you would like to learn
+more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
+guide.
+
+There are different cloud-based solutions for running your workloads in a {kube} cluster. 
+A cloud-based infrastructure enables you to focus on developing your microservices without 
+worrying about details related to the servers you deploy them to. Using a cloud helps 
+you to easily scale and serve your microservices in a high-availability setup.
+
+Red Hat OpenShift is available in multiple platforms. OpenShift Dedicated is Red Hat's private cloud platform. OpenShift Online is
+Re Hat's public cloud platform. OpenShift Container Platform is Red Hat's private cloud application deployment and hosting platform, 
+built on top of your own infastructure. This guide will use OpenShift Online, where you will host your own {kube} cluster on Red Hat's 
+pubilc cloud, and deploy your containerized applications to.
+
+The two microservices you will deploy are called `system` and `inventory`. 
+The `system` microservice returns the JVM system properties of the running container. 
+It also returns the pod’s name in the HTTP header, making replicas easy to distinguish 
+from each other. The `inventory` microservice adds the properties from the `system` microservice 
+to the inventory. This demonstrates how communication can be established between pods 
+inside a cluster.
+
+
+// =================================================================================================
+// Prerequisites
+// =================================================================================================
+
+== Prerequisites
+
+Before you begin, the following tools need to be installed:
+
+- *Docker:* You need a containerization software for building containers. Kubernetes 
+supports various container types, but you will use Docker in this guide. For installation 
+instructions, refer to the official https://docs.docker.com/install/[Docker^] documentation.
+
+- *oc:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
+For installation instructions, refer to the official 
+https://docs.openshift.com/online/getting_started/beyond_the_basics.html#btb-installing-the-openshift-cli[OpenShift Online^] documentation.
+
+To verify that the OpenShift CLI is installed correctly, run the following command:
+
+[role=command]
+```
+oc version
+```
+
+
+// =================================================================================================
+// Getting Started
+// =================================================================================================
+
+[role=command]
 include::{common-includes}/gitclone.adoc[]
-//--** This include adoc will have the heading "Getting started".
-//--** If you are not using this command include statement, you'll need to add it as a subheading,
-//--** ie, "== Getting started".
+
+// no "try what you'll build" section in this guide since it would be too long due to all setup the user will have to do.
 
 
+// =================================================================================================
+// Creating a Kubernetes cluster on OpenShift
+// =================================================================================================
+
+== Creating a Kubernetes cluster on OpenShift
+
+Before you can deploy your microservices, you must create a {kube} cluster on OpenShift.
+
+// =================================================================================================
+// Provisioning a cluster
+// =================================================================================================
+
+=== Provisioning a cluster
+
+To create a {kube} cluster, you must sign up for a Red Hat account, and select the OpenShift Online starter tier, which
+includes access to their public cloud platform. To sign up, refer to the 
+https://www.openshift.com/trial/[official website^].
+
+Once your cluster is provisioned, use the OpenShift CLI to login using the following command, where both `your_cluster_ID` and
+`your_session_token` can be found by navigating to the `About Page > Command Line Tools` of the online web console.
+
+[source, role="no_copy"]
+```
+oc login https://[your_cluster_ID].openshift.com --token=[your_session_token]
+```
 
 
-///////////////////////////
-// Try what you’ll build
-///////////////////////////
+// =================================================================================================
+// Deploying microservices to OpenShift Online
+// =================================================================================================
 
-//--** This is a subsection of the "Getting started" section above. It should briefly walk the user
-//--** through how to setup everything in the "finish" directory and try out the finished version of
-//--** what they will be building.
+== Deploying microservices to OpenShift Online
 
-[role='command']
-include::{common-includes}/trywhatyoubuild-intro.adoc[]
-//--** This include adoc will have the subheading "Try what you'll build".
-//--** If you are not using this command include statement, you'll need to add it as a subheading,
-//--** ie, "=== Try what you'll build".
+In this section, you will learn how to deploy two microservices in Open Liberty containers to a {kube}
+cluster on OpenShift. You will build and containerize the `system` and `inventory` microservices, 
+push them to a container registry, and then deploy them to your {kube} cluster. 
 
-//--** Describe what user should run and expect to see after running the complete version of the application.
-Add a brief explanation on how to use the finished application.
+// =================================================================================================
+// Building and containerizing the microservices
+// =================================================================================================
 
-[role='command']
-include::{common-includes}/trywhatyoubuild-end.adoc[]
+=== Building and containerizing the microservices
 
+The first step of deploying to {kube} is to build your microservices and containerize them.
 
+The starting Java project, which you can find in the `start` directory, is a multi-module Maven
+project. It is made up of the `system` and `inventory` microservices. Each microservice resides in its own directory,
+`start/system` and `start/inventory`. Both of these directories contain a Dockerfile, which is necessary
+for building the Docker images. If you're unfamiliar with Dockerfiles, check out the
+https://openliberty.io/guides/docker.html[Using Docker containers to develop microservices^] guide.
 
+If you're familiar with Maven and Docker, you might be tempted to run a Maven build first and then
+use the `.war` file to build a Docker image. The projects are setup such that this process is automated
+as a part of a single Maven build. It is created by using the `dockerfile-maven` plug-in. The plug-in automatically
+picks up the Dockerfile that is located in the same directory as its POM file and builds a Docker image from it.
 
-== Section title for this section, starting with a gerund like Creating, Building, etc
+****
+[system]#*{win}*#
 
-//--** Add the various sections that are needed for a particular guide.
+On the Docker Desktop General Setting page, ensure that the option `Expose daemon on 
+tcp://localhost:2375 without TLS` is enabled. This configuration is required by the `dockerfile-maven` 
+part of the build.
 
-//--** Start each additional section title with a meaningful gerund such as Creating, Building, Testing.
-//--** Follow the gerund with a meaningful noun phrase. For example: Creating a JAX-RS application
-//--** Have as many sections and section titles as needed.
-// EXAMPLES:
+****
 
-* Building a todo list model
+Navigate to the `start` directory and run the following command:
 
-* Creating an application manager
+[role=command]
+```
+mvn package
+```
 
-* Creating the JAX-RS Resource
+The `package` goal automatically starts the `dockerfile-maven:build` goal. It runs during the
+`package` phase. This goal builds a Docker image from the Dockerfile that is located in the same directory
+as the POM file.
 
+During the build, you see various Docker messages that describe what images are being downloaded and
+built. When the build finishes, run the following command to list all local Docker images:
 
-//--** Write a sentence with the context like "Navigate to the `start` directory to begin." in the section
-//--** where user starts working with the implementation.
+[role=command]
+```
+docker images
+```
 
+Verify that the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images are listed among them, for example:
 
-//--** What to add for each section:
-//--** Start each section with a meaningful description about what the user is doing in the section.
-//--** Include code snippets.
-//--** Avoid making all the documentation a series of steps and tasks, bullets, or numbered lists.
-//--** Use tick marks around directories, files, values, class names, method names, and so on.
-//--** Example: `this-is-a-file`, `this/is/a/path`, `thisIsAMethod`.
-
-
-
-// EXAMPLE: The following block demonstrates how different sections look like for a todo application.
-// ======================================================================================================
-== EXAMPLE: Building a todo list model
-
-* Navigate to the `start` directory
-* Represent an entry in a todo list
-
-[role="code_command hotspot", subs="quotes"]
+[source, role="no_copy"]
 ----
-#Create the `TodoModel` class.#
-`src/main/java/io/openliberty/guides/todolistSample/models/TodoModel.java`
-----
-
-TodoModel.java
-[source, Java, linenums, indent=0, role="code_column"]
-----
-include::finish/src/main/java/io/openliberty/guides/todolistSample/models/TodoModel.java[tags=**;!copyright;]
-----
-
-* Getters, setters, and default constructor such that the model can be serialized/deserialized easily
-
-== EXAMPLE: Creating an application manager
-
-* Create a manager that is injected into the JAX-RS resource
-
-[role="code_command hotspot file=0", subs="quotes"]
-----
-#Create the `TodoManager` interface.#
-`src/main/java/io/openliberty/guides/todo/managers/TodoManager.java`
-----
-
-TodoManager.java
-[source, Java, linenums, indent=0, role="code_column"]
-----
-include::finish/src/main/java/io/openliberty/guides/todolistSample/managers/TodoManager.java[tags=**;!copyright;]
-----
-
-* Next, create the sample todo manager class
-
-[role="code_command hotspot file=1", subs="quotes"]
-----
-#Create the `SampleTodoManager` class.#
-`src/main/java/io/openliberty/guides/todolistSample/managers/samples/SampleTodoManager.java`
+REPOSITORY                    TAG
+system                        1.0-SNAPSHOT
+inventory                     1.0-SNAPSHOT
+open-liberty                  latest
 ----
 
-SampleTodoManager.java
-[source, Java, linenums, indent=0, role="code_column"]
-----
-include::finish/src/main/java/io/openliberty/guides/todolistSample/managers/samples/SampleTodoManager.java[tags=**;!copyright;]
-----
+If you don't see the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images, then check the Maven
+build log for any potential errors.
 
-* Implemented basic CRUD ([hotspot=32-36 file=1]`Create`, [hotspot=39-44 file=1]`Read`,
-[hotspot=47-57 file=1]`Update`, and [hotspot=60-68 file=1]`Delete`) operations.
-* Manager is [hotspot=14 file=1]`ApplicationScoped`, which essentially means that it is a singleton.
+// =================================================================================================
+// Pushing the images to the OpenShift Online integrated container registry
+// =================================================================================================
 
-== EXAMPLE: Creating the JAX-RS resource
+=== Pushing the images to a container registry
 
-* Description of the technology, possibly with a link to learn more.
-* Use CDI to inject the todo manager into the resource
+OpenShift Online provides an integrated container image registry called OpenShift Container Registry (OCR).
+Pushing the images to a registry allows the cluster to create pods by using your container images. 
 
-[role="code_command hotspot", subs="quotes"]
-----
-#Create the `TodoResource` class.#
-`src/main/java/io/openliberty/guides/todolistSample/resources/TodoResource.java`
-----
+//TODO: Add a small paragraph here explaining the application images. 
 
-TodoResource.java
-[source, Java, linenums, indent=0, role="code_column"]
-----
-include::finish/src/main/java/io/openliberty/guides/todolistSample/resources/TodoResource.java[tags=**;!copyright;]
-----
-
-* The resource methods are accessible via HTTP
-* Use [hotspot=27-43]`GET`, [hotspot=45-54]`POST`, [hotspot=56-71]`PUT`,
-and [hotspot=73-83]`DELETE` verbs to handle reading, creating, updating,
-and deleting resources
-* Validate data models and send appropriate response accordingly
-// ======================================================================================================
-
-
-
-
-//////////////////////////////////////////
-// Building and running the application
-//////////////////////////////////////////
-
-//--** Use the following include to pull in the Maven build instructions from the guides-common repo.
-[role='command']
-include::{common-includes}/mvnbuild.adoc[]
-//--** This include adoc will have the subheading "Building and running the application".
-//--** If you are not using this command include statement, you'll need to add it as a subheading,
-//--** ie, "== Building and running the application".
-
-//--** In between here, you should state where you application can be found now that its running. ie. urls
-//--** Sample usage of the application
-//--** Suggestions for what changes the reader can make to explore the code
-
-//--** Use the following include to pull in the Maven rebuild instructions from the
-//--** guides-common repo.
-[role='command']
-include::{common-includes}/mvncompile.adoc[]
-
-
-
-
-== Testing the application
-
-//--** Show how to test your application.
-
-// EXAMPLE:
-// ======================================================================================================
-
-[role="code_command hotspot", subs="quotes"]
-----
-#Create the `TodoTest` class.#
-`finish/src/test/java/it/io/openliberty/guides/todo/TodoTest.java`
-----
-
-TodoTest.java
-[source, Java, linenums, indent=0, role="code_column"]
-----
-include::finish/src/test/java/it/io/openliberty/guides/todolistSample/TodoTest.java[tags=**;!copyright;]
-----
-
-* Explain what each [hotspot=13-20]`@Test` test case is testing
-* Explain key methods
-// ======================================================================================================
-
-//--** Include this for info on how to run the tests
-[role='command']
-include::{common-includes}/mvnverify.adoc[]
-
-//--** Including a listing block with test results here
-//--** Show console output of the test results
-
-//--** OPTIONAL: after listing the test results, mention a simple change a user can make/introduce that
-//--** will cause the tests to fail. Be brief and don't give the users all of the instructions.
-//--** At this point, they should be comfortable enough to figure it out on their own.
-
-
-
-
-== Great work! You're done!
-
-//--** Briefly summarize what the user achieved in this guide (1-2 sentences).
-EXAMPLE: You have just completed building a simple todo list application using JAXRS and CDI services in Open Liberty.
-
-//--** OPTIONAL: briefly state what the user could do next now that they've learned the
-//--** technologies in this guide.
-
-//--** Include the below from the guides-common repo to tell users how they can contribute to the guide
-include::{common-includes}/attribution.adoc[subs="attributes"]
-
-//--** DO NO CREATE ANYMORE SECTIONS AT THIS POINT
-//--** Related guides will be added in automatically here if you included them in ":page-related-guides"
-// ------------ END ------------
+After logging into OpenShift using the CLI, 
