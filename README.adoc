@@ -43,7 +43,7 @@ Explore how to deploy microservices to Red Hat OpenShift's public cloud. //NOTE:
 
 == What you'll learn 
 
-You will learn how to deploy two microservices in Open Liberty containers to a {kube}
+You will learn how to deploy two microservices in Open Liberty containers to a built-in {kube}
 cluster using OpenShift Online, Red Hat's public cloud platform.
 
 Kubernetes is an open source container orchestrator that automates many tasks involved in 
@@ -57,7 +57,7 @@ worrying about details related to the servers you deploy them to. Using a cloud 
 you to easily scale and serve your microservices in a high-availability setup.
 
 Red Hat OpenShift is available in multiple platforms. OpenShift Dedicated is Red Hat's private cloud platform. OpenShift Online is
-Re Hat's public cloud platform. OpenShift Container Platform is Red Hat's private cloud application deployment and hosting platform, 
+Red Hat's public cloud platform. OpenShift Container Platform is Red Hat's private cloud application deployment and hosting platform, 
 built on top of your own infastructure. This guide will use OpenShift Online, where you will host your own {kube} cluster on Red Hat's 
 pubilc cloud, and deploy your containerized applications to.
 
@@ -121,12 +121,19 @@ To create a {kube} cluster, you must sign up for a Red Hat account, and select t
 includes access to their public cloud platform. To sign up, refer to the 
 https://www.openshift.com/trial/[official website^].
 
-Once your cluster is provisioned, use the OpenShift CLI to login using the following command, where both `your_cluster_ID` and
-`your_session_token` can be found by navigating to the `About Page > Command Line Tools` of the online web console.
+Once your cluster is provisioned, you are given access to their online web console. To login to OpenShift using the CLI, 
+navigate to the online web console `> [username] > Copy Login Command > Display Token > Log in with this token`.
 
 [source, role="no_copy"]
 ```
-oc login https://[your_cluster_ID].openshift.com --token=[your_session_token]
+oc login --token=[your-token] --server=https://api.[cluster-id].online-starter.openshift.com:[port]
+```
+
+OpenShift will prompt you to create a project, which you can do by simply running the following command:
+
+[role=command]
+```
+oc new-project [project-name]
 ```
 
 
@@ -201,14 +208,72 @@ If you don't see the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images, 
 build log for any potential errors.
 
 // =================================================================================================
-// Pushing the images to the OpenShift Online integrated container registry
+// Pushing the images to Docker Hub
 // =================================================================================================
 
-=== Pushing the images to a container registry
+=== Pushing the images to Docker Hub
 
-OpenShift Online provides an integrated container image registry called OpenShift Container Registry (OCR).
-Pushing the images to a registry allows the cluster to create pods by using your container images. 
+OpenShift Online can create containers using images hosted on third party image registries, such as Docker Hub.
+Docker Hub is Docker's own cloud-based repository where you can push images to.
 
-//TODO: Add a small paragraph here explaining the application images. 
+To push Docker images to Docker Hub, you must create a free account, to do so, refer to the https://hub.docker.com/[official website^].
+Once created, login and click on `Create Repository`, set the name to `inventory`, and ensure that the repository is set to public
+before clicking `create`. Create another public repository with the name `system`.
 
-After logging into OpenShift using the CLI, 
+Now that the remote repositories have been created, the local Docker images needs to be tagged and pushed. 
+
+Run the following commands to tag your applications, making sure to replace `[username]` with your Docker Hub username:
+
+[role=command]
+```
+docker tag inventory:1.0-SNAPSHOT [username]/inventory:1.0-SNAPSHOT && \
+docker tag system:1.0-SNAPSHOT [username]/system:1.0-SNAPSHOT
+```
+
+Run the following commands to push your applications to the Docker Hub repositories making sure to replace `[username]` with your 
+Docker Hub username:
+
+[role=command]
+```
+docker push [username]/inventory:1.0-SNAPSHOT && \
+docker push [username]/system:1.0-SNAPSHOT
+```
+
+Now that the images are on Docker Hub, OpenShift can now be configured to pull from those repositories to deploy the application
+onto the internal {kube} cluster. Change the `kubernetes.yaml` file, replacing [username] with your Docker Hub username.
+
+//TODO: Display the kubernetes.yaml file on the right-hand pane, or make the user create it.
+Ensure that you are logged into OpenShift, now apply the configuration that is contained in the kubernetes.yaml file to the 
+OpenShift cluster by running the following command:
+
+[role=command]
+```
+oc apply -f kubernetes.yaml
+```
+
+The configuration deploys both the `inventory` and the `system` application as well as creates services to allow for the
+communication between the two containers internally. If successful you should see the following output:
+
+[source, role="no_copy"]
+```
+deployment.apps/system-deployment created
+deployment.apps/inventory-deployment created
+service/system-service created
+service/inventory-service created
+```
+
+//TODO: Elaborate on OpenShift routes
+To access the services and therefore the application, you need to use a route. A route in OpenShift exposes a service at 
+a hostname such as `www.your-web-app.com` so users can access the application. 
+
+Simply run the following commands to expose your services:
+
+[role=command]
+```
+oc expose svc/inventory-service && \
+oc expose svc/system-service
+```
+
+//TODO: Maybe replace the hostname with a general one that we can link in the guide? 
+Your applications can now be accessed through the URL which can be found in the web console under `Networking > Routes > Location`. 
+It will be automatically formatted like so `http://inventory-service-[project-name].apps.[cluster-id].online-starter.openshift.com/`
