@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
       - name: system-container
-        image: registry.hub.docker.com/[username]/system:1.0-SNAPSHOT
+        image: image-registry.openshift-image-registry.svc:5000/mai-test/system:1.0-SNAPSHOT
         ports:
         - containerPort: 9081
----
+--- 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
       - name: inventory-container
-        image: registry.hub.docker.com/[username]/inventory:1.0-SNAPSHOT
+        image: image-registry.openshift-image-registry.svc:5000/mai-test/inventory:1.0-SNAPSHOT
         ports:
         - containerPort: 9080
 ---

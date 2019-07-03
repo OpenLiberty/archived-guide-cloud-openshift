@@ -208,42 +208,37 @@ If you don't see the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images, 
 build log for any potential errors.
 
 // =================================================================================================
-// Pushing the images to Docker Hub
+// Pushing the images to OpenShift's internal registry
 // =================================================================================================
 
-=== Pushing the images to Docker Hub
+=== Pushing the images to OpenShift's internal registry
 
-OpenShift Online can create containers using images hosted on third party image registries, such as Docker Hub.
-Docker Hub is Docker's own cloud-based repository where you can push images to.
+OpenShift provides an integrated container registry called OpenShift Container Registry (OCR) that adds the ability to 
+automatically provision new image repositories on demand. This provides users with a built-in location for their 
+application builds to push the resulting images.
 
-To push Docker images to Docker Hub, you must create a free account, to do so, refer to the https://hub.docker.com/[official website^].
-Once created, login and click on `Create Repository`, set the name to `inventory`, and ensure that the repository is set to public
-before clicking `create`. Create another public repository with the name `system`.
+To have the cluster use the created images, the local Docker images needs to be tagged and pushed. 
 
-Now that the remote repositories have been created, the local Docker images needs to be tagged and pushed. 
-
-Run the following commands to tag your applications, making sure to replace `[username]` with your Docker Hub username:
+Ensure that you are logged into OpenShift, now run the following commands to tag your applications, making sure to replace 
+`[cluster-id]` and `[project-name]` with their respective values:
 
 [role=command]
 ```
-docker tag inventory:1.0-SNAPSHOT [username]/inventory:1.0-SNAPSHOT && \
-docker tag system:1.0-SNAPSHOT [username]/system:1.0-SNAPSHOT
+docker tag system:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT && \
+docker tag inventory:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
 ```
 
-Run the following commands to push your applications to the Docker Hub repositories making sure to replace `[username]` with your 
-Docker Hub username:
+Run the following commands to push your applications to the OCR repositories making sure to replace `[cluster-id]` and `[project-name]` 
+with their respective values:
 
 [role=command]
 ```
-docker push [username]/inventory:1.0-SNAPSHOT && \
-docker push [username]/system:1.0-SNAPSHOT
+docker push default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT && \
+docker push default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
 ```
-
-Now that the images are on Docker Hub, OpenShift can now be configured to pull from those repositories to deploy the application
-onto the internal {kube} cluster. Change the `kubernetes.yaml` file, replacing [username] with your Docker Hub username.
 
 //TODO: Display the kubernetes.yaml file on the right-hand pane, or make the user create it.
-Ensure that you are logged into OpenShift, now apply the configuration that is contained in the kubernetes.yaml file to the 
+Now apply the configuration that is contained in the kubernetes.yaml file to the 
 OpenShift cluster by running the following command:
 
 [role=command]
