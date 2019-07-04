@@ -7,12 +7,11 @@
 // Contributors:
 //     IBM Corporation
 //
-//FIX: This whole block of metadata
 :projectid: cloud-openshift
 :page-layout: guide-multipane
 :page-duration: 45 minutes 
 :page-releasedate: 2019-05-29
-:page-description: Explore how to deploy microservices to Red Hat OpenShift's public cloud. //NOTE: Same description as below
+:page-description: Explore how to deploy microservices to Red Hat OpenShift's public cloud. 
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
@@ -26,7 +25,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website^].
 
-Explore how to deploy microservices to Red Hat OpenShift's public cloud. //NOTE: Same description as above
+Explore how to deploy microservices to Red Hat OpenShift's public cloud. 
 
 :kube: Kubernetes
 :hashtag: #
@@ -36,6 +35,15 @@ Explore how to deploy microservices to Red Hat OpenShift's public cloud. //NOTE:
 :system-api: http://[hostname]:31000/system/properties
 :inventory-api: http://[hostname]:32000/inventory/systems
 
+// =================================================================================================
+// File Includes
+// =================================================================================================
+
+kubernetes.yaml
+[source, Text, linenums, indent=0, role="code_column"]
+----
+include::finish/kubernetes.yaml[]
+----
 
 // =================================================================================================
 // Introduction
@@ -124,10 +132,12 @@ https://www.openshift.com/trial/[official website^].
 Once your cluster is provisioned, you are given access to their online web console. To login to OpenShift using the CLI, 
 navigate to the online web console `> [username] > Copy Login Command > Display Token > Log in with this token`.
 
-[source, role="no_copy"]
-```
+The command will look like this:
+
+[role="no_copy"]
+----
 oc login --token=[your-token] --server=https://api.[cluster-id].online-starter.openshift.com:[port]
-```
+----
 
 OpenShift will prompt you to create a project, which you can do by simply running the following command:
 
@@ -196,7 +206,7 @@ docker images
 
 Verify that the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images are listed among them, for example:
 
-[source, role="no_copy"]
+[role="no_copy"]
 ----
 REPOSITORY                    TAG
 system                        1.0-SNAPSHOT
@@ -213,14 +223,25 @@ build log for any potential errors.
 
 === Pushing the images to OpenShift's internal registry
 
-OpenShift provides an integrated container registry called OpenShift Container Registry (OCR) that adds the ability to 
-automatically provision new image repositories on demand. This provides users with a built-in location for their 
-application builds to push the resulting images.
+Pushing the images to a registry allows the cluster to create pods by using your container images. The registry that you 
+will use is called OpenShift Container Registry (OCR).
 
-To have the cluster use the created images, the local Docker images needs to be tagged and pushed. 
+First, you must authenticate your Docker client to your OCR. Start by running the login command:
 
-Ensure that you are logged into OpenShift, now run the following commands to tag your applications, making sure to replace 
-`[cluster-id]` and `[project-name]` with their respective values:
+[role=command]
+```
+oc registry login
+```
+
+The command authenticates you against the internal registry and then be able to push and pull images. The registry address will be displayed after running the 
+oc registry login command, it will be formatted like so:
+
+[role="no_copy"]
+----
+default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com
+----
+
+Ensure that you are logged into OpenShift as well as the registry, now run the following commands to tag your applications:
 
 [role=command]
 ```
@@ -228,8 +249,7 @@ docker tag system:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[clus
 docker tag inventory:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
 ```
 
-Run the following commands to push your applications to the OCR repositories making sure to replace `[cluster-id]` and `[project-name]` 
-with their respective values:
+Finally, push your images to the registry:
 
 [role=command]
 ```
@@ -237,29 +257,74 @@ docker push default-route-openshift-image-registry.apps.[cluster-id].online-star
 docker push default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
 ```
 
-//TODO: Display the kubernetes.yaml file on the right-hand pane, or make the user create it.
-Now apply the configuration that is contained in the kubernetes.yaml file to the 
-OpenShift cluster by running the following command:
+When you tag and push your images, remember to substitute `[cluster-id]` and `[project-name]` with the appropriate values.
 
-[role=command]
+// =================================================================================================
+// Deploying the microservices
+// =================================================================================================
+
+=== Deploying the microservices
+
+Now that your container images are built, deploy them using a Kubernetes resource definition.
+
+A Kubernetes resource definition is a yaml file that contains a description of all your 
+deployments, services, or any other resources that you want to deploy. All resources can 
+also be deleted from the cluster by using the same yaml file that you used to deploy them.
+The `kubernetes.yaml` resource definition file is provided for you. If you are interested 
+in learning more about the Kubernetes resource definition, check out the 
+https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
+guide.
+
+[role="code_command hotspot", subs="quotes"]
+----
+#Update the `kubernetes.yaml` file.#
+`kubernetes.yaml`
+----
+
+[role="edit_command_text"]
+The [hotspot=systemImage hotspot=inventoryImage]`image` is the name and tag of the container image that you want 
+to use for the container. Update the system [hotspot=systemImage]`image` and the inventory [hotspot=inventoryImage]`image` 
+fields to include your project name.
+
+
+Run the following commands to deploy the resources as defined in kubernetes.yaml:
+[role='command']
 ```
 oc apply -f kubernetes.yaml
 ```
 
-The configuration deploys both the `inventory` and the `system` application as well as creates services to allow for the
-communication between the two containers internally. If successful you should see the following output:
+You will see an output similar to the following:
 
-[source, role="no_copy"]
-```
+[role="no_copy"]
+----
 deployment.apps/system-deployment created
 deployment.apps/inventory-deployment created
 service/system-service created
 service/inventory-service created
+----
+
+When the apps are deployed, run the following command to check the status of your pods:
+[role='command']
+```
+oc get pods
 ```
 
-//TODO: Elaborate on OpenShift routes
+If all the pods are healthy and running, you see an output similar to the following:
+[source, role="no_copy"]
+----
+NAME                                    READY     STATUS    RESTARTS   AGE
+system-deployment-6bd97d9bf6-4ccds      1/1       Running   0          15s
+inventory-deployment-645767664f-nbtd9   1/1       Running   0          15s
+----
+
+// =================================================================================================
+// Making requests to the microservices
+// =================================================================================================
+
+=== Making requests to the microservices
+
 To access the services and therefore the application, you need to use a route. A route in OpenShift exposes a service at 
-a hostname such as `www.your-web-app.com` so users can access the application. 
+a hostname such as `www.your-web-app.com` so external users can access the application. 
 
 Simply run the following commands to expose your services:
 
@@ -269,6 +334,18 @@ oc expose svc/inventory-service && \
 oc expose svc/system-service
 ```
 
-//TODO: Maybe replace the hostname with a general one that we can link in the guide? 
-Your applications can now be accessed through the URL which can be found in the web console under `Networking > Routes > Location`. 
-It will be automatically formatted like so `http://inventory-service-[project-name].apps.[cluster-id].online-starter.openshift.com/`
+Your microservices can now be accessed through the hostnames which can be found in the web console under `Networking > Routes > Location`. 
+It will be automatically formatted like so `http://inventory-service-[project-name].apps.[cluster-id].online-starter.openshift.com`
+
+To access your microservices, point your browser to the following URLs, substituting the appropriate hostnames
+for the `system` and `inventory` services:
+
+- `[system-hostname]/system/properties/`
+- `[inventory-hostname]/inventory/systems`
+
+In the first URL, you see a result in JSON format with the system properties of the container JVM. The second URL returns an empty list, 
+which is expected because no system properties are stored in the inventory yet.
+
+Point your browser to the `[inventory-hostname]/inventory/systems/system-service` URL. When you visit this URL, these system
+properties are automatically stored in the inventory. Go back to `[inventory-hostname]/inventory/systems` and
+you see a new entry.

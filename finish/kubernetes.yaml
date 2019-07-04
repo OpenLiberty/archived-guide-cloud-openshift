@@ -15,10 +15,12 @@ spec:
     spec:
       containers:
       - name: system-container
-        image: registry.starter-us-east-2.openshift.com/mai-test/system:1.0-SNAPSHOT
+        # tag::systemImage[]
+        image: image-registry.openshift-image-registry.svc:5000/[project-name]/system:1.0-SNAPSHOT
+        # end::systemImage[]
         ports:
-        - containerPort: 9081
----
+        - containerPort: 9080
+--- 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,7 +38,9 @@ spec:
     spec:
       containers:
       - name: inventory-container
-        image: registry.starter-us-east-2.openshift.com/mai-test/inventory:1.0-SNAPSHOT
+        # tag::inventoryImage[]
+        image: image-registry.openshift-image-registry.svc:5000/[project-name]/inventory:1.0-SNAPSHOT
+        # end::inventoryImage[]
         ports:
         - containerPort: 9080
 ---
@@ -49,7 +53,7 @@ spec:
     app: system
   ports:
   - protocol: TCP
-    port: 9081
+    port: 9080
 ---
 apiVersion: v1
 kind: Service
