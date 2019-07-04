@@ -32,10 +32,15 @@
         <http.port>9080</http.port>
         <https.port>9443</https.port>
         <!-- Default test properties -->
-        <cluster.ip>localhost</cluster.ip>
+        <!-- tag::systemIP[] -->
+        <system.ip>system-service-[project-name].apps.[cluster-ip].online-starter.openshift.com</system.ip>
+        <!-- end::systemIP[] -->
+        <!-- tag::inventoryIP[] -->
+        <inventory.ip>inventory-service-[project-name].apps.[cluster-ip].online-starter.openshift.com</inventory.ip>
+        <!-- end::inventoryIP[] -->
+        <!-- tag::systemKubeService[] -->
         <system.kube.service>system-service</system.kube.service>
-        <system.node.port>31000</system.node.port>
-        <inventory.node.port>32000</inventory.node.port>
+        <!-- end::systemKubeService[] -->
     </properties>
 
     <dependencyManagement>

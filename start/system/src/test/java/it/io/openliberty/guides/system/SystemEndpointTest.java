@@ -1,4 +1,3 @@
-// tag::copyright[]
 /*******************************************************************************
  * Copyright (c) 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,7 +8,6 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::copyright[]
 package it.io.openliberty.guides.system;
 
 import static org.junit.Assert.assertEquals;
@@ -39,9 +37,9 @@ public class SystemEndpointTest {
 
     @BeforeClass
     public static void oneTimeSetup() {
-        String clusterIp = System.getProperty("cluster.ip");
+        String systemIp = System.getProperty("system.ip");
         String nodePort = System.getProperty("system.node.port");
-        clusterUrl = "http://" + clusterIp + ":" + nodePort + "/system/properties/";
+        clusterUrl = "http://" + systemIp + "/system/properties/";
     }
     
     @Before

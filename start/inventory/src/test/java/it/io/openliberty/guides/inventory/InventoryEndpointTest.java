@@ -1,4 +1,3 @@
-// tag::copyright[]
 /*******************************************************************************
  * Copyright (c) 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,7 +8,6 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::copyright[]
 package it.io.openliberty.guides.inventory;
 
 import static org.junit.Assert.assertEquals;
@@ -40,13 +38,12 @@ public class InventoryEndpointTest {
 
     @BeforeClass
     public static void oneTimeSetup() {
-        String clusterIp = System.getProperty("cluster.ip");
-        String invNodePort = System.getProperty("inventory.node.port");
-        String sysNodePort = System.getProperty("system.node.port");
+        String systemIp = System.getProperty("system.ip");
+        String inventoryIp = System.getProperty("inventory.ip");
         
         sysKubeService = System.getProperty("system.kube.service");
-        invUrl = "http://" + clusterIp + ":" + invNodePort + "/inventory/systems/";
-        sysUrl = "http://" + clusterIp + ":" + sysNodePort + "/system/properties/";
+        invUrl = "http://" + inventoryIp + "/inventory/systems/";
+        sysUrl = "http://" + systemIp + "/system/properties/";
     }
 
     @Before
@@ -69,8 +66,6 @@ public class InventoryEndpointTest {
         client.close();
     }
 
-    // tag::tests[]
-    // tag::testSuite[]
     @Test
     public void testSuite() {
         this.testEmptyInventory();
@@ -78,9 +73,7 @@ public class InventoryEndpointTest {
         this.testSystemPropertiesMatch();
         this.testUnknownHost();
     }
-    // end::testSuite[]
 
-    // tag::testEmptyInventory[]
     public void testEmptyInventory() {
         Response response = this.getResponse(invUrl);
         this.assertResponse(invUrl, response);
@@ -94,9 +87,7 @@ public class InventoryEndpointTest {
 
         response.close();
     }
-    // end::testEmptyInventory[]
 
-    // tag::testHostRegistration[]
     public void testHostRegistration() {
         this.visitSystemService();
 
@@ -118,9 +109,7 @@ public class InventoryEndpointTest {
 
         response.close();
     }
-    // end::testHostRegistration[]
 
-    // tag::testSystemPropertiesMatch[]
     public void testSystemPropertiesMatch() {
         Response invResponse = this.getResponse(invUrl);
         Response sysResponse = this.getResponse(sysUrl);
@@ -148,9 +137,7 @@ public class InventoryEndpointTest {
         invResponse.close();
         sysResponse.close();
     }
-    // end::testSystemPropertiesMatch[]
 
-    // tag::testUnknownHost[]
     public void testUnknownHost() {
         Response response = this.getResponse(invUrl);
         this.assertResponse(invUrl, response);
@@ -169,10 +156,6 @@ public class InventoryEndpointTest {
         badResponse.close();
     }
 
-    // end::testUnknownHost[]
-    // end::tests[]
-    // tag::helpers[]
-    // tag::javadoc[]
     /**
      * <p>
      * Returns response information from the specified URL.
@@ -182,12 +165,10 @@ public class InventoryEndpointTest {
      *          - target URL.
      * @return Response object with the response from the specified URL.
      */
-    // end::javadoc[]
     private Response getResponse(String url) {
         return client.target(url).request().get();
     }
 
-    // tag::javadoc[]
     /**
      * <p>
      * Asserts that the given URL has the correct response code of 200.
@@ -198,13 +179,11 @@ public class InventoryEndpointTest {
      * @param response
      *          - response received from the target URL.
      */
-    // end::javadoc[]
     private void assertResponse(String url, Response response) {
         assertEquals("Incorrect response code from " + url, 200,
                     response.getStatus());
     }
 
-    // tag::javadoc[]
     /**
      * Asserts that the specified JVM system property is equivalent in both the
      * system and inventory services.
@@ -218,7 +197,6 @@ public class InventoryEndpointTest {
      * @param actual
      *          - actual name.
      */
-    // end::javadoc[]
     private void assertProperty(String propertyName, String hostname,
         String expected, String actual) {
         assertEquals("JVM system property [" + propertyName + "] "
@@ -226,11 +204,9 @@ public class InventoryEndpointTest {
             + "the inventory service for " + hostname, expected, actual);
     }
 
-    // tag::javadoc[]
     /**
      * Makes a simple GET request to inventory/localhost.
      */
-    // end::javadoc[]
     private void visitSystemService() {
         Response response = this.getResponse(sysUrl);
         this.assertResponse(sysUrl, response);
