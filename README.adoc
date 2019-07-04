@@ -76,6 +76,9 @@ from each other. The `inventory` microservice adds the properties from the `syst
 to the inventory. This demonstrates how communication can be established between pods 
 inside a cluster.
 
+// =================================================================================================
+// Prerequisites
+// =================================================================================================
 
 // =================================================================================================
 // Prerequisites
@@ -110,6 +113,7 @@ include::{common-includes}/gitclone.adoc[]
 
 // no "try what you'll build" section in this guide since it would be too long due to all setup the user will have to do.
 
+To verify that the OpenShift CLI is installed correctly, run the following command:
 
 // =================================================================================================
 // Creating a Kubernetes cluster on OpenShift
