@@ -398,8 +398,8 @@ Use the following command to run the integration tests against your cluster. Sub
 
 [role=command]
 ```
-mvn verify -Ddockerfile.skip=true \\
--Dsystem.ip=system-service-[project-name].apps.[cluster-ip].online-starter.openshift.com  \\
+mvn verify -Ddockerfile.skip=true \
+-Dsystem.ip=system-service-[project-name].apps.[cluster-ip].online-starter.openshift.com  \
 -Dinventory.ip=inventory-service-[project-name].apps.[cluster-ip].online-starter.openshift.com
 ```
 
