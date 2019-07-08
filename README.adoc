@@ -42,7 +42,7 @@ Explore how to deploy microservices to Red Hat OpenShift's public cloud.
 == What you'll learn 
 
 You will learn how to deploy two microservices in Open Liberty containers to a built-in {kube}
-cluster using OpenShift Online, Red Hat's public cloud platform.
+cluster on OpenShift Online, Red Hat's public cloud platform.
 
 Kubernetes is an open source container orchestrator that automates many tasks involved in 
 deploying, managing, and scaling containerized applications. If you would like to learn
@@ -227,19 +227,36 @@ First, you must authenticate your Docker client to your OCR. Start by running th
 oc registry login
 ```
 
-The command authenticates you against the internal registry and then be able to push and pull images. The registry address will be displayed after running the 
-oc registry login command, it will be formatted like so:
+However, if you are using a custom credentials store for securing your registry credentials, you will need to use the following command:
+
+[role=command]
+```
+docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
+```
+
+The command authenticates you against the internal registry allowing you to then be able to push and pull images. The registry address will 
+be displayed after running the oc registry login command, it will be formatted like so:
 
 [role="no_copy"]
 ----
 default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com
 ----
 
-Ensure that you are logged into OpenShift as well as the registry, now run the following commands to tag your applications:
+You can also view the registry address by running the following:
 
 [role=command]
 ```
-docker tag system:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT && \
+oc registry info
+```
+
+Ensure you keep note of the `[cluster-id]` section, as it will be needed in further steps.
+
+Ensure that you are logged into OpenShift as well as the registry, now run the following commands to tag your applications, 
+remember to substitute `[cluster-id]` and `[project-name]` with the appropriate values:
+
+[role=command]
+```
+docker tag system:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT
 docker tag inventory:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
 ```
 
@@ -247,11 +264,9 @@ Finally, push your images to the registry:
 
 [role=command]
 ```
-docker push default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT && \
+docker push default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT 
 docker push default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
 ```
-
-When you tag and push your images, remember to substitute `[cluster-id]` and `[project-name]` with the appropriate values.
 
 // =================================================================================================
 // Deploying the microservices
@@ -286,7 +301,6 @@ The [hotspot=systemImage hotspot=inventoryImage]`image` is the name and tag of t
 to use for the container. Update the system [hotspot=systemImage]`image` and the inventory [hotspot=inventoryImage]`image` 
 fields to include your project name.
 
-
 Run the following commands to deploy the resources as defined in kubernetes.yaml:
 [role='command']
 ```
@@ -301,6 +315,8 @@ deployment.apps/system-deployment created
 deployment.apps/inventory-deployment created
 service/system-service created
 service/inventory-service created
+route.route.openshift.io/system-route created
+route.route.openshift.io/inventory-route created
 ----
 
 When the apps are deployed, run the following command to check the status of your pods:
@@ -326,27 +342,29 @@ inventory-deployment-645767664f-nbtd9   1/1       Running   0          15s
 To access the services and therefore the application, you need to use a route. A route in OpenShift exposes a service at 
 a hostname such as `www.your-web-app.com` so external users can access the application. 
 
-Simply run the following commands to expose your services:
+kubernetes.yaml
+[source, yaml, linenums, role="code_column"]
+----
+include::finish/kubernetes.yaml[]
+----
 
-[role=command]
-```
-oc expose svc/inventory-service && \
-oc expose svc/system-service
-```
+Both the [hotspot=systemRoute]`system` and [hotspot=inventoryRoute]`inventory` routes were configured in the [hotspot]`kubernetes.yaml` 
+file, and both services were exposed when the `oc apply -f kubernetes.yaml` command was run.
 
 Your microservices can now be accessed through the hostnames which can be found in the web console under `Networking > Routes > Location`. 
-It will be automatically formatted like so `http://inventory-service-[project-name].apps.[cluster-id].online-starter.openshift.com`
+The hostnames will be formatted like so `inventory-service-[project-name].apps.[cluster-id].online-starter.openshift.com`. Ensure
+you are in your project, not the default, which is shown in the top left corner of the web console.
 
 To access your microservices, point your browser to the following URLs, substituting the appropriate hostnames
 for the `system` and `inventory` services:
 
-- `[system-hostname]/system/properties/`
-- `[inventory-hostname]/inventory/systems`
+- `http://[system-hostname]/system/properties/`
+- `http://[inventory-hostname]/inventory/systems`
 
 In the first URL, you see a result in JSON format with the system properties of the container JVM. The second URL returns an empty list, 
 which is expected because no system properties are stored in the inventory yet.
 
-Point your browser to the `[inventory-hostname]/inventory/systems/system-service` URL. When you visit this URL, these system
+Point your browser to the `http://[inventory-hostname]/inventory/systems/system-service` URL. When you visit this URL, these system
 properties are automatically stored in the inventory. Go back to `[inventory-hostname]/inventory/systems` and
 you see a new entry.
 
@@ -423,7 +441,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 
 == Tearing down the environment
 
-When you no longer need your deployed microservices, you can delete all {kube} resources 
+When you no longer need your deployed microservices, you can delete the {kube} deployments, services, and routes 
 by running the `oc delete` command:
 
 [role='command']

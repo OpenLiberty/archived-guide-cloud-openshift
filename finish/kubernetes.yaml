@@ -65,3 +65,25 @@ spec:
   ports:
   - protocol: TCP
     port: 9080
+---
+# tag::systemRoute[]
+apiVersion: v1
+kind: Route
+metadata:
+  name: system-route
+spec:
+  to:
+    kind: Service
+    name: system-service
+# end::systemRoute[]
+---
+# tag::inventoryRoute[]
+apiVersion: v1
+kind: Route
+metadata:
+  name: inventory-route
+spec:
+  to:
+    kind: Service
+    name: inventory-service
+# end::inventoryRoute[]
