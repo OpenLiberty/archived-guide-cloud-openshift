@@ -52,12 +52,10 @@ guide.
 There are different cloud-based solutions for running your workloads in a {kube} cluster. 
 A cloud-based infrastructure enables you to focus on developing your microservices without 
 worrying about details related to the servers you deploy them to. Using a cloud helps 
-you to easily scale and serve your microservices in a high-availability setup.
-
-Red Hat OpenShift is available in multiple platforms. OpenShift Dedicated is Red Hat's private cloud platform. OpenShift Online is
-Red Hat's public cloud platform. OpenShift Container Platform is Red Hat's private cloud application deployment and hosting platform, 
-built on top of your own infastructure. This guide will use OpenShift Online, where you will host your own {kube} cluster on Red Hat's 
-pubilc cloud, and deploy your containerized applications to.
+you to easily scale and serve your microservices in a high-availability setup. This guide will use OpenShift Online, 
+where you will host your own {kube} cluster on Red Hat's pubilc cloud, and deploy your containerized applications to.
+To learn more about the different platforms that Red Hat OpenShift offers, check out their  
+https://docs.openshift.com[official documentation^].
 
 The two microservices you will deploy are called `system` and `inventory`. 
 The `system` microservice returns the JVM system properties of the running container. 
@@ -65,10 +63,6 @@ It also returns the pod’s name in the HTTP header, making replicas easy to dis
 from each other. The `inventory` microservice adds the properties from the `system` microservice 
 to the inventory. This demonstrates how communication can be established between pods 
 inside a cluster.
-
-// =================================================================================================
-// Prerequisites
-// =================================================================================================
 
 // =================================================================================================
 // Prerequisites
@@ -121,7 +115,8 @@ Before you can deploy your microservices, you must create a {kube} cluster on Op
 
 To create a {kube} cluster, you must sign up for a Red Hat account, and select the OpenShift Online starter tier, which
 includes access to their public cloud platform. To sign up, refer to the 
-https://www.openshift.com/trial/[official website^].
+https://www.openshift.com/trial/[official website^]. Signing up for an account will automatically provision a single
+cluster for you to use.
 
 Once your cluster is provisioned, you are given access to their online web console. To login to OpenShift using the CLI, 
 navigate to the online web console `> [username] > Copy Login Command > Display Token > Log in with this token`.
@@ -130,7 +125,7 @@ The command will look like this:
 
 [role="no_copy"]
 ----
-oc login --token=[your-token] --server=https://api.[cluster-id].online-starter.openshift.com:[port]
+oc login --token=[your-token] --server=https://api.[region].online-starter.openshift.com:[port]
 ----
 
 OpenShift will prompt you to create a project, which you can do by simply running the following command:
@@ -239,7 +234,7 @@ be displayed after running the oc registry login command, it will be formatted l
 
 [role="no_copy"]
 ----
-default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com
+default-route-openshift-image-registry.apps.[region].online-starter.openshift.com
 ----
 
 You can also view the registry address by running the following:
@@ -249,23 +244,23 @@ You can also view the registry address by running the following:
 oc registry info
 ```
 
-Ensure you keep note of the `[cluster-id]` section, as it will be needed in further steps.
+Ensure you keep note of the `[region]` section, as it will be needed in further steps.
 
 Ensure that you are logged into OpenShift as well as the registry, now run the following commands to tag your applications, 
-remember to substitute `[cluster-id]` and `[project-name]` with the appropriate values:
+remember to substitute `[region]` and `[project-name]` with the appropriate values:
 
 [role=command]
 ```
-docker tag system:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT
-docker tag inventory:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
+docker tag system:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[region].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT
+docker tag inventory:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[region].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
 ```
 
 Finally, push your images to the registry:
 
 [role=command]
 ```
-docker push default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT 
-docker push default-route-openshift-image-registry.apps.[cluster-id].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
+docker push default-route-openshift-image-registry.apps.[region].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT 
+docker push default-route-openshift-image-registry.apps.[region].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
 ```
 
 // =================================================================================================
@@ -352,7 +347,7 @@ Both the [hotspot=systemRoute]`system` and [hotspot=inventoryRoute]`inventory` r
 file, and both services were exposed when the `oc apply -f kubernetes.yaml` command was run.
 
 Your microservices can now be accessed through the hostnames which can be found in the web console under `Networking > Routes > Location`. 
-The hostnames will be formatted like so `inventory-service-[project-name].apps.[cluster-id].online-starter.openshift.com`. Ensure
+The hostnames will be formatted like so `inventory-service-[project-name].apps.[region].online-starter.openshift.com`. Ensure
 you are in your project, not the default, which is shown in the top left corner of the web console.
 
 To access your microservices, point your browser to the following URLs, substituting the appropriate hostnames
