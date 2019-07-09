@@ -359,9 +359,9 @@ for the `system` and `inventory` services:
 In the first URL, you see a result in JSON format with the system properties of the container JVM. The second URL returns an empty list, 
 which is expected because no system properties are stored in the inventory yet.
 
-Point your browser to the `http://[inventory-hostname]/inventory/systems/system-service` URL. When you visit this URL, these system
-properties are automatically stored in the inventory. Go back to `[inventory-hostname]/inventory/systems` and
-you see a new entry.
+Point your browser to the `http://[inventory-hostname]/inventory/systems/system-service` URL. When you visit this URL, the system
+properties taken from the `system-service` are automatically stored in the inventory. Go back to `http://[inventory-hostname]/inventory/systems` 
+and you should see a new entry.
 
 // =================================================================================================
 // Testing the microservices
@@ -442,6 +442,14 @@ by running the `oc delete` command:
 [role='command']
 ```
 oc delete -f kubernetes.yaml
+```
+
+To delete the pushed images, run the following `oc delete` commands:
+
+[role='command']
+```
+oc delete imagestream/inventory
+oc delete imagestream/system
 ```
 
 // =================================================================================================
