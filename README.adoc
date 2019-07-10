@@ -17,7 +17,7 @@
 :page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master 
 :source-highlighter: prettify
-:page-seo-title: Deploying microservices to Openshift 
+:page-seo-title: Deploying microservices to OpenShift 
 :page-seo-description: A tutorial on how to deploy microservices to Amazon EKS using Amazon Elastic Container Registry (ECR) as a private container registry. 
 :guide-author: Open Liberty
 = Deploying microservices to OpenShift Online
