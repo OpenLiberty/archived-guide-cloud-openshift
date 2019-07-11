@@ -18,9 +18,9 @@
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master 
 :source-highlighter: prettify
 :page-seo-title: Deploying microservices to OpenShift 
-:page-seo-description: A tutorial on how to deploy microservices to Amazon EKS using Amazon Elastic Container Registry (ECR) as a private container registry. 
+:page-seo-description: A tutorial on how to deploy microservices to OpenShift using OpenShift Container Registry (OCR) as a container registry. 
 :guide-author: Open Liberty
-= Deploying microservices to OpenShift Online
+= Deploying microservices to OpenShift
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website^].
@@ -42,7 +42,7 @@ Explore how to deploy microservices to Red Hat OpenShift's public cloud.
 == What you'll learn 
 
 You will learn how to deploy two microservices in Open Liberty containers to a built-in {kube}
-cluster on OpenShift Online, Red Hat's public cloud platform.
+cluster on OpenShift, Red Hat's cloud platform.
 
 Kubernetes is an open source container orchestrator that automates many tasks involved in 
 deploying, managing, and scaling containerized applications. If you would like to learn
@@ -137,10 +137,10 @@ oc new-project [project-name]
 
 
 // =================================================================================================
-// Deploying microservices to OpenShift Online
+// Deploying microservices to OpenShift
 // =================================================================================================
 
-== Deploying microservices to OpenShift Online
+== Deploying microservices to OpenShift
 
 In this section, you will learn how to deploy two microservices in Open Liberty containers to a {kube}
 cluster on OpenShift. You will build and containerize the `system` and `inventory` microservices, 
@@ -293,8 +293,8 @@ include::finish/kubernetes.yaml[]
 
 [role="edit_command_text"]
 The [hotspot=systemImage hotspot=inventoryImage]`image` is the name and tag of the container image that you want 
-to use for the container. Update the system [hotspot=systemImage]`image` and the inventory [hotspot=inventoryImage]`image` 
-fields to include your project name.
+to use for the container. The image address used is the OCR address that you logged into, simply update the system 
+[hotspot=systemImage]`image` and the inventory [hotspot=inventoryImage]`image` fields to include your project name.
 
 Run the following commands to deploy the resources as defined in kubernetes.yaml:
 [role='command']
@@ -458,7 +458,7 @@ oc delete imagestream/system
 
 == Great work! You're done!
 
-You have just deployed two microservices running in Open Liberty to OpenShift Online. You also 
+You have just deployed two microservices running in Open Liberty to OpenShift. You also 
 learned how to use `oc` to deploy your microservices on a {kube} cluster.
 
 // Multipane
