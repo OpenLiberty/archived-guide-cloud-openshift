@@ -389,13 +389,13 @@ The default properties that are defined in the [hotspot]`pom.xml` file are:
 |===
 
 Use the following command to run the integration tests against your cluster. Substitute 
-`[cluster-ip]` and `[project-name]` with the appropriate values:
+`[region]` and `[project-name]` with the appropriate values:
 
 [role=command]
 ```
 mvn verify -Ddockerfile.skip=true \
--Dsystem.ip=system-service-[project-name].apps.[cluster-ip].online-starter.openshift.com  \
--Dinventory.ip=inventory-service-[project-name].apps.[cluster-ip].online-starter.openshift.com
+-Dsystem.ip=system-route-[project-name].apps.[region].online-starter.openshift.com  \
+-Dinventory.ip=inventory-route-[project-name].apps.[region].online-starter.openshift.com
 ```
 
 - The `dockerfile.skip` parameter is set to `true` to skip building a new container image.
