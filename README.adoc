@@ -9,7 +9,7 @@
 //
 :projectid: cloud-openshift
 :page-layout: guide-multipane
-:page-duration: 45 minutes 
+:page-duration: 30 minutes 
 :page-releasedate: 2019-05-29
 :page-description: Explore how to deploy microservices to Red Hat OpenShift's public cloud. 
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
@@ -42,18 +42,18 @@ Explore how to deploy microservices to Red Hat OpenShift's public cloud.
 == What you'll learn 
 
 You will learn how to deploy two microservices in Open Liberty containers to a built-in {kube}
-cluster on OpenShift, Red Hat's cloud platform.
+cluster on OpenShift; Red Hat's cloud platform.
 
-Kubernetes is an open source container orchestrator that automates many tasks involved in 
+Kubernetes is an open source container orchestrator that automates many tasks that are involved in 
 deploying, managing, and scaling containerized applications. If you would like to learn
 more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
 guide.
 
 There are different cloud-based solutions for running your workloads in a {kube} cluster. 
 A cloud-based infrastructure enables you to focus on developing your microservices without 
-worrying about details related to the servers you deploy them to. Using a cloud helps 
-you to easily scale and serve your microservices in a high-availability setup. This guide will use OpenShift Online, 
-where you will host your own {kube} cluster on Red Hat's pubilc cloud, and deploy your containerized applications to.
+worrying about details that are related to the servers you deploy them to. Using a cloud helps 
+you to easily scale and serve your microservices in a high-availability setup. You will build and
+deploy containerized applications to your own {kube} cluster on OpenShift.
 To learn more about the different platforms that Red Hat OpenShift offers, check out their  
 https://docs.openshift.com[official documentation^].
 
@@ -76,6 +76,11 @@ Before you begin, the following tools need to be installed:
 supports various container types, but you will use Docker in this guide. For installation 
 instructions, refer to the official https://docs.docker.com/install/[Docker^] documentation.
 
+- *OpenShift account:* To create a {kube} cluster, you must sign up for a Red Hat account, and select the OpenShift Online starter tier, which
+includes access to their public cloud platform. To sign up, refer to the 
+https://www.openshift.com/trial/[official website^]. Signing up for an account will automatically provision a single
+cluster for you to use. Keep in mind that the creation time depends on resource availability, and may take some time.
+
 - *oc:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
 https://docs.openshift.com/online/getting_started/beyond_the_basics.html#btb-installing-the-openshift-cli[OpenShift Online^] documentation.
@@ -97,8 +102,6 @@ include::{common-includes}/gitclone.adoc[]
 
 // no "try what you'll build" section in this guide since it would be too long due to all setup the user will have to do.
 
-To verify that the OpenShift CLI is installed correctly, run the following command:
-
 // =================================================================================================
 // Creating a Kubernetes cluster on OpenShift
 // =================================================================================================
@@ -113,12 +116,8 @@ Before you can deploy your microservices, you must create a {kube} cluster on Op
 
 === Provisioning a cluster
 
-To create a {kube} cluster, you must sign up for a Red Hat account, and select the OpenShift Online starter tier, which
-includes access to their public cloud platform. To sign up, refer to the 
-https://www.openshift.com/trial/[official website^]. Signing up for an account will automatically provision a single
-cluster for you to use.
-
-Once your cluster is provisioned, you are given access to their online web console. To login to OpenShift using the CLI, 
+Creating a starter tier OpenShift account will automatically provision a cluster for you. Once your cluster is provisioned, 
+you are given access to their online web console. To login to OpenShift using the CLI, 
 navigate to the online web console `> [username] > Copy Login Command > Display Token > Log in with this token`.
 
 The command will look like this:
@@ -128,7 +127,7 @@ The command will look like this:
 oc login --token=[your-token] --server=https://api.[region].online-starter.openshift.com:[port]
 ----
 
-OpenShift will prompt you to create a project, which you can do by simply running the following command:
+You will need to work on a project, which you can create by simply running the following command:
 
 [role=command]
 ```
@@ -229,7 +228,9 @@ However, if you are using a custom credentials store for securing your registry 
 docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
 ```
 
-The command authenticates you against the internal registry allowing you to then be able to push and pull images. The registry address will 
+You should also use the above command if you run into authentication errors when pushing the images further down the line.
+
+The command authenticates you against the internal registry, allowing you to then be able to push and pull images. The registry address will 
 be displayed after running the oc registry login command, it will be formatted like so:
 
 [role="no_copy"]
@@ -246,7 +247,7 @@ oc registry info
 
 Ensure you keep note of the `[region]` section, as it will be needed in further steps.
 
-Ensure that you are logged into OpenShift as well as the registry, now run the following commands to tag your applications, 
+Ensure that you are logged in to OpenShift as well as the registry, now run the following commands to tag your applications, 
 remember to substitute `[region]` and `[project-name]` with the appropriate values:
 
 [role=command]
@@ -274,7 +275,7 @@ Now that your container images are built, deploy them using a Kubernetes resourc
 A Kubernetes resource definition is a yaml file that contains a description of all your 
 deployments, services, or any other resources that you want to deploy. All resources can 
 also be deleted from the cluster by using the same yaml file that you used to deploy them.
-The `kubernetes.yaml` resource definition file is provided for you. If you are interested 
+The [hotspot]`kubernetes.yaml` resource definition file is provided for you. If you are interested 
 in learning more about the Kubernetes resource definition, check out the 
 https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
 guide.
@@ -293,7 +294,7 @@ include::finish/kubernetes.yaml[]
 
 [role="edit_command_text"]
 The [hotspot=systemImage hotspot=inventoryImage]`image` is the name and tag of the container image that you want 
-to use for the container. The image address used is the OCR address that you logged into, simply update the system 
+to use for the container. The image address that is used is the OCR address that you logged in to, simply update the system 
 [hotspot=systemImage]`image` and the inventory [hotspot=inventoryImage]`image` fields to include your project name.
 
 Run the following commands to deploy the resources as defined in kubernetes.yaml:
@@ -347,8 +348,8 @@ Both the [hotspot=systemRoute]`system` and [hotspot=inventoryRoute]`inventory` r
 file, and both services were exposed when the `oc apply -f kubernetes.yaml` command was run.
 
 Your microservices can now be accessed through the hostnames which can be found in the web console under `Networking > Routes > Location`. 
-The hostnames will be formatted like so `inventory-service-[project-name].apps.[region].online-starter.openshift.com`. Ensure
-you are in your project, not the default, which is shown in the top left corner of the web console.
+The hostnames will be formatted like so `inventory-route-[project-name].apps.[region].online-starter.openshift.com`. Ensure that
+you are in your project, not the default, which is shown in the upper-left corner of the web console.
 
 To access your microservices, point your browser to the following URLs, substituting the appropriate hostnames
 for the `system` and `inventory` services:
@@ -360,7 +361,7 @@ In the first URL, you see a result in JSON format with the system properties of 
 which is expected because no system properties are stored in the inventory yet.
 
 Point your browser to the `http://[inventory-hostname]/inventory/systems/system-service` URL. When you visit this URL, the system
-properties taken from the `system-service` are automatically stored in the inventory. Go back to `http://[inventory-hostname]/inventory/systems` 
+properties that are taken from the `system-service` are automatically stored in the inventory. Go back to `http://[inventory-hostname]/inventory/systems` 
 and you should see a new entry.
 
 // =================================================================================================
@@ -437,19 +438,26 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 == Tearing down the environment
 
 When you no longer need your deployed microservices, you can delete the {kube} deployments, services, and routes 
-by running the `oc delete` command:
+by running the following command:
 
 [role='command']
 ```
 oc delete -f kubernetes.yaml
 ```
 
-To delete the pushed images, run the following `oc delete` commands:
+To delete the pushed images, run the following commands:
 
 [role='command']
 ```
 oc delete imagestream/inventory
 oc delete imagestream/system
+```
+
+And finally, you can delete the project by running the following command:
+
+[role='command']
+```
+oc delete project [project-name]
 ```
 
 // =================================================================================================
