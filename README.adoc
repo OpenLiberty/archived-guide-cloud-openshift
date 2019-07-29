@@ -230,6 +230,13 @@ docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
 
 You should also use the above command if you run into authentication errors when pushing the images further down the line.
 
+****
+[system]#*{win}*#
+
+Since the Windows Command Prompt doesn't support the command substitution as displayed, you must run the `oc whoami`, `oc whoami -t`,
+and `oc registry info` commands seperately and then substitute them manually into the `docker login` command.
+****
+
 The command authenticates you against the internal registry, allowing you to then be able to push and pull images. The registry address will 
 be displayed after running the oc registry login command, it will be formatted like so:
 
