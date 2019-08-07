@@ -298,13 +298,13 @@ docker push default-route-openshift-image-registry.apps.[region].online-starter.
 
 === Deploying the microservices
 
-Now that your container images are built, deploy them using a Kubernetes resource definition.
+Now that your container images are built, deploy them using a Kubernetes object configuration file.
 
-A Kubernetes resource definition is a yaml file that contains a description of all your 
-deployments, services, or any other resources that you want to deploy. All resources can 
+{kube} objects can be configured in a yaml file that contains a description of all your 
+deployments, services, or any other objects that you want to deploy. All objects can 
 also be deleted from the cluster by using the same yaml file that you used to deploy them.
-The [hotspot]`kubernetes.yaml` resource definition file is provided for you. If you are interested 
-in learning more about the Kubernetes resource definition, check out the 
+The [hotspot]`kubernetes.yaml` object configuration file is provided for you. If you are interested 
+in learning more about Kubernetes, check out the 
 https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
 guide.
 
