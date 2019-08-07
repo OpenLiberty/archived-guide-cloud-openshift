@@ -11,7 +11,7 @@
 :page-layout: guide-multipane
 :page-duration: 30 minutes 
 :page-releasedate: 2019-05-29
-:page-description: Explore how to deploy microservices to Red Hat OpenShift's public cloud. 
+:page-description: Explore how to deploy microservices to Red Hat OpenShift
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
@@ -25,7 +25,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website^].
 
-Explore how to deploy microservices to Red Hat OpenShift's public cloud. 
+Explore how to deploy microservices to Red Hat OpenShift. 
 
 :kube: Kubernetes
 :hashtag: #
@@ -41,8 +41,7 @@ Explore how to deploy microservices to Red Hat OpenShift's public cloud.
 
 == What you'll learn 
 
-You will learn how to deploy two microservices in Open Liberty containers to a built-in {kube}
-cluster on OpenShift; Red Hat's cloud platform.
+You will learn how to deploy two microservices in Open Liberty containers to an OpenShift cluster.
 
 Kubernetes is an open source container orchestrator that automates many tasks that are involved in 
 deploying, managing, and scaling containerized applications. If you would like to learn
@@ -53,9 +52,10 @@ There are different cloud-based solutions for running your workloads in a {kube}
 A cloud-based infrastructure enables you to focus on developing your microservices without 
 worrying about details that are related to the servers you deploy them to. Using a cloud helps 
 you to easily scale and serve your microservices in a high-availability setup. You will build and
-deploy containerized applications to your own {kube} cluster on OpenShift.
+deploy containerized applications to an OpenShift cluster. Keep in mind that OpenShift relies and is
+similar to {kube} with added functionality.
 To learn more about the different platforms that Red Hat OpenShift offers, check out their  
-https://docs.openshift.com[official documentation^].
+https://docs.openshift.com[official documentation^]. 
 
 The two microservices you will deploy are called `system` and `inventory`. 
 The `system` microservice returns the JVM system properties of the running container. 
@@ -81,7 +81,7 @@ includes access to their public cloud platform. To sign up, refer to the
 https://www.openshift.com/trial/[official website^]. Signing up for an account will automatically provision a single
 cluster for you to use. Keep in mind that the creation time depends on resource availability, and may take some time.
 
-- *oc:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
+- *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
 https://docs.openshift.com/online/getting_started/beyond_the_basics.html#btb-installing-the-openshift-cli[OpenShift Online^] documentation.
 
@@ -91,6 +91,18 @@ To verify that the OpenShift CLI is installed correctly, run the following comma
 ```
 oc version
 ```
+
+You should get an output similar to:
+
+[role="no_copy"]
+----
+oc v3.11.0+0cbc58b
+kubernetes v1.11.0+d4cacc0
+features: Basic-Auth
+
+Server https://api.us-east-2.online-starter.openshift.com:6443
+kubernetes v1.13.4+8560dd6
+----
 
 
 // =================================================================================================
@@ -103,21 +115,15 @@ include::{common-includes}/gitclone.adoc[]
 // no "try what you'll build" section in this guide since it would be too long due to all setup the user will have to do.
 
 // =================================================================================================
-// Creating a Kubernetes cluster on OpenShift
+// Accessing an OpenShift cluster
 // =================================================================================================
 
-== Creating a Kubernetes cluster on OpenShift
+== Accessing an OpenShift cluster
 
-Before you can deploy your microservices, you must create a {kube} cluster on OpenShift.
+Before you can deploy your microservices, you must gain access to a cluster on OpenShift.
 
-// =================================================================================================
-// Provisioning a cluster
-// =================================================================================================
-
-=== Provisioning a cluster
-
-Creating a starter tier OpenShift account will automatically provision a cluster for you. Once your cluster is provisioned, 
-you are given access to their online web console. To login to OpenShift using the CLI, 
+Creating a starter tier OpenShift account will automatically grant you access to their multi-tenant, OpenShift cluster. 
+Once you have been granted access, you are also given access to their online web console. To login to OpenShift using the CLI, 
 navigate to the online web console `> [username] > Copy Login Command > Display Token > Log in with this token`.
 
 The command will look like this:
@@ -133,7 +139,6 @@ You will need to work on a project, which you can create by simply running the f
 ```
 oc new-project [project-name]
 ```
-
 
 // =================================================================================================
 // Deploying microservices to OpenShift
@@ -212,7 +217,8 @@ build log for any potential errors.
 === Pushing the images to OpenShift's internal registry
 
 Pushing the images to a registry allows the cluster to create pods by using your container images. The registry that you 
-will use is called OpenShift Container Registry (OCR).
+will use is called OpenShift Container Registry (OCR), which is OpenShift's own internal registry which allows a built-in
+location for you to push images to.
 
 First, you must authenticate your Docker client to your OCR. Start by running the login command:
 
@@ -221,7 +227,8 @@ First, you must authenticate your Docker client to your OCR. Start by running th
 oc registry login
 ```
 
-However, if you are using a custom credentials store for securing your registry credentials, you will need to use the following command:
+You can store your Docker credentials in a custom external credentials store, which is more secure than using a Docker configuration file.
+If you are using a custom credentials store for securing your registry credentials, or if you are unsure, you will need to use the following command:
 
 ****
 [system]#*{mac} & {linux}*#
@@ -242,17 +249,17 @@ oc whoami
 oc whoami -t
 oc registry info
 ```
+
 taking the results of the above and manually inputting them into the following `docker login` command:
+
 [role=command]
 ```
 docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
 ```
 ****
 
-You should also use the above command if you run into authentication errors when pushing the images further down the line.
-
 The command authenticates you against the internal registry, allowing you to then be able to push and pull images. The registry address will 
-be displayed after running the oc registry login command, it will be formatted like so:
+be displayed after running the `oc registry login` command, it will be formatted like so:
 
 [role="no_copy"]
 ----
