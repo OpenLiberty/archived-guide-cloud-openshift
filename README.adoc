@@ -254,7 +254,7 @@ taking the results of the above and manually inputting them into the following `
 
 [role=command]
 ```
-docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
+docker login -u [oc whoami] -p [oc whoami -t] [oc registry info]
 ```
 ****
 
@@ -273,24 +273,66 @@ You can also view the registry address by running the following:
 oc registry info
 ```
 
-Ensure you keep note of the `[region]` section, as it will be needed in further steps.
+Ensure that you are logged in to OpenShift as well as the registry, now run the following commands to tag your applications:
 
-Ensure that you are logged in to OpenShift as well as the registry, now run the following commands to tag your applications, 
-remember to substitute `[region]` and `[project-name]` with the appropriate values:
+****
+[system]#*{mac} & {linux}*#
+[role=command]
+```
+docker tag system:1.0-SNAPSHOT `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
+docker tag inventory:1.0-SNAPSHOT `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
+```
+****
+
+****
+[system]#*{win}*#
+
+Since the Windows Command Prompt doesn't support the command substitution as displayed above for Mac and Linux, you must run the following commands: 
+[role=command]
+```
+oc registry info
+oc project -q
+```
+
+taking the results of the above and manually inputting them into the following `docker tag` commands:
 
 [role=command]
 ```
-docker tag system:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[region].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT
-docker tag inventory:1.0-SNAPSHOT default-route-openshift-image-registry.apps.[region].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
+docker tag system:1.0-SNAPSHOT [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
+docker tag inventory:1.0-SNAPSHOT [oc registry info]/[oc project -q]/inventory:1.0-SNAPSHOT
 ```
+****
 
 Finally, push your images to the registry:
 
+****
+[system]#*{mac} & {linux}*#
+
 [role=command]
 ```
-docker push default-route-openshift-image-registry.apps.[region].online-starter.openshift.com/[project-name]/system:1.0-SNAPSHOT 
-docker push default-route-openshift-image-registry.apps.[region].online-starter.openshift.com/[project-name]/inventory:1.0-SNAPSHOT
+docker push `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
+docker push `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
 ```
+****
+
+****
+[system]#*{win}*#
+
+Since the Windows Command Prompt doesn't support the command substitution as displayed above for Mac and Linux, you must run the following commands: 
+[role=command]
+```
+oc registry info
+oc project -q
+```
+
+taking the results of the above and manually inputting them into the following `docker push` commands:
+
+[role=command]
+```
+docker push [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
+docker push [oc registry info]/[oc project -q]/inventory:1.0-SNAPSHOT
+```
+****
 
 // =================================================================================================
 // Deploying the microservices
@@ -325,7 +367,7 @@ The [hotspot=systemImage hotspot=inventoryImage]`image` is the name and tag of t
 to use for the container. The image address that is used is the OCR address that you logged in to, simply update the system 
 [hotspot=systemImage]`image` and the inventory [hotspot=inventoryImage]`image` fields to include your project name.
 
-Run the following commands to deploy the resources as defined in kubernetes.yaml:
+Run the following commands to deploy the objects as defined in kubernetes.yaml:
 [role='command']
 ```
 oc apply -f kubernetes.yaml
@@ -361,7 +403,7 @@ inventory-deployment-645767664f-nbtd9   1/1       Running   0          15s
 // Making requests to the microservices
 // =================================================================================================
 
-=== Making requests to the microservices
+== Making requests to the microservices
 
 To access the services and therefore the application, you need to use a route. A route in OpenShift exposes a service at 
 a hostname such as `www.your-web-app.com` so external users can access the application. 
@@ -375,7 +417,14 @@ include::finish/kubernetes.yaml[]
 Both the [hotspot=systemRoute]`system` and [hotspot=inventoryRoute]`inventory` routes were configured in the [hotspot]`kubernetes.yaml` 
 file, and both services were exposed when the `oc apply -f kubernetes.yaml` command was run.
 
-Your microservices can now be accessed through the hostnames which can be found in the web console under `Networking > Routes > Location`. 
+Your microservices can now be accessed through the hostnames which you can find by running the following command:
+
+[role='command']
+```
+oc get routes
+```
+
+They can also be found in the web console under `Networking > Routes > Location`. 
 The hostnames will be formatted like so `inventory-route-[project-name].apps.[region].online-starter.openshift.com`. Ensure that
 you are in your project, not the default, which is shown in the upper-left corner of the web console.
 
