@@ -76,10 +76,10 @@ Before you begin, the following tools need to be installed:
 supports various container types, but you will use Docker in this guide. For installation 
 instructions, refer to the official https://docs.docker.com/install/[Docker^] documentation.
 
-- *OpenShift account:* To create a {kube} cluster, you must sign up for a Red Hat account, and select the OpenShift Online starter tier, which
-includes access to their public cloud platform. To sign up, refer to the 
-https://www.openshift.com/trial/[official website^]. Signing up for an account will automatically provision a single
-cluster for you to use. Keep in mind that the creation time depends on resource availability, and may take some time.
+- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat account, and select the 30-day trial of the
+OpenShift Online Pro tier, which includes access to their public cloud platform. To sign up, refer to the 
+https://manage.openshift.com/register/plan[official website^]. Keep in mind that the creation time depends on resource availability, 
+and may take some time.
 
 - *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
