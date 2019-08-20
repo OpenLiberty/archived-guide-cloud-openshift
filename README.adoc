@@ -46,14 +46,14 @@ You will learn how to deploy two microservices in Open Liberty containers to an 
 There are different cloud-based solutions for running your workloads in a {kube} cluster. 
 A cloud-based infrastructure enables you to focus on developing your microservices without 
 worrying about details that are related to the servers you deploy them to. Using a cloud helps 
-you to easily scale and serve your microservices in a high-availability setup. You will build and
-deploy containerized applications to an OpenShift cluster. 
+you to easily scale and serve your microservices in a high-availability setup.
 
-OpenShift is a Kubernetes-based platform with added functionality. To learn more about the different platforms that Red Hat 
-OpenShift offers, check out their https://docs.openshift.com[official documentation^]. Kubernetes is an open source container orchestrator that a
-utomates many tasks that are involved in deploying, managing, and scaling containerized applications. If you would like to learn
-more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
-guide.
+Kubernetes is an open source container orchestrator that automates many tasks that are involved in deploying, managing, and scaling containerized applications. 
+If you would like to learn more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^] guide.
+
+OpenShift is a Kubernetes-based platform with added functionality. It streamlines the DevOps process by providing an intuitive development pipeline, 
+as well as provides integration with multiple tools to make the deployment and management of cloud applications easier.
+To learn more about the different platforms that Red Hat OpenShift offers, check out their https://docs.openshift.com[official documentation^]. 
 
 The two microservices you will deploy are called `system` and `inventory`. 
 The `system` microservice returns the JVM system properties of the running container. 
@@ -214,9 +214,9 @@ build log for any potential errors.
 
 === Pushing the images to OpenShift's internal registry
 
-Pushing the images to a registry allows the cluster to create pods by using your container images. The registry that you 
-will use is OpenShift's own internal registry, called OpenShift Container Registry (OCR), which provices a built-in
-location for you to push images to.
+In order to run the microservices on the cluster, you need to push the microservice images into a container image registry. 
+In this guide you will use OpenShift's integrated container image registry called OpenShift Container Registry (OCR). 
+Once your images are pushed into the registry, you can use them in the pods you create later in the guide.
 
 First, you must authenticate your Docker client to your OCR. Start by running the login command:
 
