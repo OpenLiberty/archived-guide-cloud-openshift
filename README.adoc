@@ -162,6 +162,19 @@ project. It is made up of the `system` and `inventory` microservices. Each micro
 for building the Docker images. If you're unfamiliar with Dockerfiles, check out the
 https://openliberty.io/guides/docker.html[Using Docker containers to develop microservices^] guide.
 
+If you're familiar with Maven and Docker, you might be tempted to run a Maven build first and then
+use the `.war` file to build a Docker image. The projects are setup such that this process is automated
+as a part of a single Maven build. It is created by using the `dockerfile-maven` plug-in. The plug-in automatically
+picks up the Dockerfile that is located in the same directory as its POM file and builds a Docker image from it.
+
+****
+[system]#*{win}*#
+
+On the Docker Desktop General Setting page, ensure that the option `Expose daemon on 
+tcp://localhost:2375 without TLS` is enabled. This configuration is required by the `dockerfile-maven` 
+part of the build.
+
+****
 
 Navigate to the `start` directory and run the following command:
 
@@ -169,14 +182,13 @@ Navigate to the `start` directory and run the following command:
 ```
 mvn package
 ```
-Next, run the `docker build` commands to build container images for your application:
-[role='command']
-```
-docker build -t system:1.0-SNAPSHOT system/.
-docker build -t inventory:1.0-SNAPSHOT inventory/.
-```
 
-When the build finishes, run the following command to list all local Docker images:
+The `package` goal automatically starts the `dockerfile-maven:build` goal. It runs during the
+`package` phase. This goal builds a Docker image from the Dockerfile that is located in the same directory
+as the POM file.
+
+During the build, you see various Docker messages that describe what images are being downloaded and
+built. When the build finishes, run the following command to list all local Docker images:
 
 [role=command]
 ```
@@ -457,11 +469,12 @@ Use the following command to run the integration tests against your cluster. Sub
 
 [role=command]
 ```
-mvn verify \
+mvn verify -Ddockerfile.skip=true \
 -Dsystem.ip=system-route-[project-name].apps.[region].online-starter.openshift.com  \
 -Dinventory.ip=inventory-route-[project-name].apps.[region].online-starter.openshift.com
 ```
 
+- The `dockerfile.skip` parameter is set to `true` to skip building a new container image.
 - The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
 - The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
 
