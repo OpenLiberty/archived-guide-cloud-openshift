@@ -48,10 +48,11 @@ deploying, managing, and scaling containerized applications. If you would like t
 more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
 guide.
 
-There are different cloud-based solutions for running your workloads in a {kube} cluster. 
-A cloud-based infrastructure enables you to focus on developing your microservices without 
-worrying about details that are related to the servers you deploy them to. Using a cloud helps 
-you to easily scale and serve your microservices in a high-availability setup. You will build and
+There are different cloud-based solutions for running your Kubernetes workloads.
+A cloud-based infrastructure enables you to focus on developing your microservices without worrying about low-level infrastructure details for deployment. Using a cloud helps
+you to easily scale and manage your microservices in a high-availability setup.
+
+ You will build and
 deploy containerized applications to an OpenShift cluster. Keep in mind that OpenShift relies and is
 similar to {kube} with added functionality.
 To learn more about the different platforms that Red Hat OpenShift offers, check out their  
