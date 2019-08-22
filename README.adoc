@@ -15,9 +15,9 @@
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
-:common-includes: ../guides-common/
+:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master 
 :source-highlighter: prettify
-:page-seo-title: Deploying microservices to Red Hat OpenShift 
+:page-seo-title: Deploying microservices to OpenShift 
 :page-seo-description: A tutorial on how to deploy microservices to OpenShift using OpenShift Container Registry (OCR) as a container registry. 
 :guide-author: Open Liberty
 = Deploying microservices to OpenShift
@@ -43,17 +43,19 @@ Explore how to deploy microservices to Red Hat OpenShift.
 
 You will learn how to deploy two microservices in Open Liberty containers to an OpenShift cluster.
 
+Kubernetes is an open source container orchestrator that automates many tasks that are involved in 
+deploying, managing, and scaling containerized applications. If you would like to learn
+more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
+guide.
+
 There are different cloud-based solutions for running your workloads in a {kube} cluster. 
 A cloud-based infrastructure enables you to focus on developing your microservices without 
 worrying about details that are related to the servers you deploy them to. Using a cloud helps 
-you to easily scale and serve your microservices in a high-availability setup.
-
-Kubernetes is an open source container orchestrator that automates many tasks that are involved in deploying, managing, and scaling containerized applications. 
-If you would like to learn more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^] guide.
-
-OpenShift is a Kubernetes-based platform with added functionality. It streamlines the DevOps process by providing an intuitive development pipeline, 
-as well as provides integration with multiple tools to make the deployment and management of cloud applications easier.
-To learn more about the different platforms that Red Hat OpenShift offers, check out their https://docs.openshift.com[official documentation^]. 
+you to easily scale and serve your microservices in a high-availability setup. You will build and
+deploy containerized applications to an OpenShift cluster. Keep in mind that OpenShift relies and is
+similar to {kube} with added functionality.
+To learn more about the different platforms that Red Hat OpenShift offers, check out their  
+https://docs.openshift.com[official documentation^]. 
 
 The two microservices you will deploy are called `system` and `inventory`. 
 The `system` microservice returns the JVM system properties of the running container. 
@@ -74,10 +76,10 @@ Before you begin, the following tools need to be installed:
 supports various container types, but you will use Docker in this guide. For installation 
 instructions, refer to the official https://docs.docker.com/install/[Docker^] documentation.
 
-- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat account, and select the 30-day trial of the
-OpenShift Online Pro tier, which includes access to their public cloud platform. To sign up, refer to the 
-https://manage.openshift.com/register/plan[official website^]. Keep in mind that the creation time depends on resource availability, 
-and may take some time.
+- *OpenShift account:* To create a {kube} cluster, you must sign up for a Red Hat account, and select the OpenShift Online starter tier, which
+includes access to their public cloud platform. To sign up, refer to the 
+https://www.openshift.com/trial/[official website^]. Signing up for an account will automatically provision a single
+cluster for you to use. Keep in mind that the creation time depends on resource availability, and may take some time.
 
 - *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
@@ -162,19 +164,6 @@ project. It is made up of the `system` and `inventory` microservices. Each micro
 for building the Docker images. If you're unfamiliar with Dockerfiles, check out the
 https://openliberty.io/guides/docker.html[Using Docker containers to develop microservices^] guide.
 
-If you're familiar with Maven and Docker, you might be tempted to run a Maven build first and then
-use the `.war` file to build a Docker image. The projects are setup such that this process is automated
-as a part of a single Maven build. It is created by using the `dockerfile-maven` plug-in. The plug-in automatically
-picks up the Dockerfile that is located in the same directory as its POM file and builds a Docker image from it.
-
-****
-[system]#*{win}*#
-
-On the Docker Desktop General Setting page, ensure that the option `Expose daemon on 
-tcp://localhost:2375 without TLS` is enabled. This configuration is required by the `dockerfile-maven` 
-part of the build.
-
-****
 
 Navigate to the `start` directory and run the following command:
 
@@ -182,13 +171,14 @@ Navigate to the `start` directory and run the following command:
 ```
 mvn package
 ```
+Next, run the `docker build` commands to build container images for your application:
+[role='command']
+```
+docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.
+```
 
-The `package` goal automatically starts the `dockerfile-maven:build` goal. It runs during the
-`package` phase. This goal builds a Docker image from the Dockerfile that is located in the same directory
-as the POM file.
-
-During the build, you see various Docker messages that describe what images are being downloaded and
-built. When the build finishes, run the following command to list all local Docker images:
+When the build finishes, run the following command to list all local Docker images:
 
 [role=command]
 ```
@@ -214,9 +204,9 @@ build log for any potential errors.
 
 === Pushing the images to OpenShift's internal registry
 
-In order to run the microservices on the cluster, you need to push the microservice images into a container image registry. 
-In this guide you will use OpenShift's integrated container image registry called OpenShift Container Registry (OCR). 
-Once your images are pushed into the registry, you can use them in the pods you create later in the guide.
+Pushing the images to a registry allows the cluster to create pods by using your container images. The registry that you 
+will use is called OpenShift Container Registry (OCR), which is OpenShift's own internal registry which allows a built-in
+location for you to push images to.
 
 First, you must authenticate your Docker client to your OCR. Start by running the login command:
 
@@ -248,7 +238,7 @@ oc whoami -t
 oc registry info
 ```
 
-and replace the square brackets in the following `docker login` command with the results:
+taking the results of the above and manually inputting them into the following `docker login` command:
 
 [role=command]
 ```
@@ -264,7 +254,7 @@ be displayed after running the `oc registry login` command, it will be formatted
 default-route-openshift-image-registry.apps.[region].online-starter.openshift.com
 ----
 
-You can also view the registry address by running the following command:
+You can also view the registry address by running the following:
 
 [role=command]
 ```
@@ -292,7 +282,7 @@ oc registry info
 oc project -q
 ```
 
-and replace the square brackets in the following `docker tag` commands with the results:
+taking the results of the above and manually inputting them into the following `docker tag` commands:
 
 [role=command]
 ```
@@ -323,7 +313,7 @@ oc registry info
 oc project -q
 ```
 
-and replace the square brackets in the following `docker push` commands with the results:
+taking the results of the above and manually inputting them into the following `docker push` commands:
 
 [role=command]
 ```
@@ -344,7 +334,7 @@ Now that your container images are built, deploy them using a Kubernetes object 
 deployments, services, or any other objects that you want to deploy. All objects can 
 also be deleted from the cluster by using the same yaml file that you used to deploy them.
 The [hotspot]`kubernetes.yaml` object configuration file is provided for you. If you are interested 
-in learning more about using and configuring Kubernetes clusters, check out the 
+in learning more about Kubernetes, check out the 
 https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
 guide.
 
@@ -469,12 +459,11 @@ Use the following command to run the integration tests against your cluster. Sub
 
 [role=command]
 ```
-mvn verify -Ddockerfile.skip=true \
+mvn verify \
 -Dsystem.ip=system-route-[project-name].apps.[region].online-starter.openshift.com  \
 -Dinventory.ip=inventory-route-[project-name].apps.[region].online-starter.openshift.com
 ```
 
-- The `dockerfile.skip` parameter is set to `true` to skip building a new container image.
 - The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
 - The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
 
