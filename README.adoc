@@ -466,8 +466,8 @@ Use the following command to run the integration tests against your cluster. Sub
 [role=command]
 ```
 mvn verify -Ddockerfile.skip=true \
--Dsystem.ip=system-route-[project-name].apps.[region].online-starter.openshift.com  \
--Dinventory.ip=inventory-route-[project-name].apps.[region].online-starter.openshift.com
+-Dsystem.ip=system-route-[project-name].apps.[region].starter.openshift-online.com  \
+-Dinventory.ip=inventory-route-[project-name].apps.[region].starter.openshift-online.com
 ```
 
 - The `dockerfile.skip` parameter is set to `true` to skip building a new container image.

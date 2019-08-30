@@ -32,8 +32,8 @@
         <http.port>9080</http.port>
         <https.port>9443</https.port>
         <!-- Default test properties -->
-        <system.ip>system-service-[project-name].apps.[cluster-ip].online-starter.openshift.com</system.ip>
-        <inventory.ip>inventory-service-[project-name].apps.[cluster-ip].online-starter.openshift.com</inventory.ip>
+        <system.ip>system-route-[project-name].apps.[region].starter.openshift-online.com</system.ip>
+        <inventory.ip>inventory-route-[project-name].apps.[region].starter.openshift-online.com</inventory.ip>
         <system.kube.service>system-service</system.kube.service>
     </properties>
 
@@ -209,22 +209,18 @@
                                     <include>**/it/**</include>
                                 </includes>
                                 <systemPropertyVariables>
-                                    <cluster.ip>${cluster.ip}</cluster.ip>
+                                    <system.ip>
+                                        ${system.ip}
+                                    </system.ip>
+                                    <inventory.ip>
+                                        $(inventory.ip)
+                                    </inventory.ip>
                                     <system.ingress.path>
                                         ${system.ingress.path}
                                     </system.ingress.path>
-                                    <system.node.port>
-                                        ${system.node.port}
-                                    </system.node.port>
-                                    <system.kube.service>
-                                        ${system.kube.service}
-                                    </system.kube.service>
                                     <inventory.ingress.path>
                                         ${inventory.ingress.path}
                                     </inventory.ingress.path>
-                                    <inventory.node.port>
-                                        ${inventory.node.port}
-                                    </inventory.node.port>
                                 </systemPropertyVariables>
                             </configuration>
                         </execution>

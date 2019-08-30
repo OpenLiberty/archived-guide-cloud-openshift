@@ -38,12 +38,12 @@ public class InventoryEndpointTest {
 
     @BeforeClass
     public static void oneTimeSetup() {
-        String systemIp = System.getProperty("system.ip");
-        String inventoryIp = System.getProperty("inventory.ip");
+        String invIP = System.getProperty("inventory.ip");
+        String sysIP = System.getProperty("system.ip");
         
         sysKubeService = System.getProperty("system.kube.service");
-        invUrl = "http://" + inventoryIp + "/inventory/systems/";
-        sysUrl = "http://" + systemIp + "/system/properties/";
+        invUrl = "http://" + invIP + "/inventory/systems/";
+        sysUrl = "http://" + sysIP + "/system/properties/";
     }
 
     @Before
