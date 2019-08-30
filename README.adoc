@@ -74,8 +74,7 @@ Before you begin, the following tools need to be installed:
 supports various container types, but you will use Docker in this guide. For installation 
 instructions, refer to the official https://docs.docker.com/install/[Docker^] documentation.
 
-- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat account, and select the 30-day trial of the
-OpenShift Online Pro tier, which includes access to their public cloud platform. To sign up, refer to the 
+- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift online account. To sign up, refer to the 
 https://manage.openshift.com/register/plan[official website^]. Keep in mind that the creation time depends on resource availability, 
 and may take some time.
 
@@ -97,9 +96,6 @@ You should get an output similar to:
 oc v3.11.0+0cbc58b
 kubernetes v1.11.0+d4cacc0
 features: Basic-Auth
-
-Server https://api.us-east-2.online-starter.openshift.com:6443
-kubernetes v1.13.4+8560dd6
 ----
 
 
@@ -120,7 +116,7 @@ include::{common-includes}/gitclone.adoc[]
 
 Before you can deploy your microservices, you must gain access to a cluster on OpenShift.
 
-Creating a starter tier OpenShift account will automatically grant you access to their multi-tenant, OpenShift cluster. 
+Creating an OpenShift account will automatically grant you access to their multi-tenant, OpenShift cluster. 
 Once you have been granted access, you are also given access to their online web console. To login to OpenShift using the CLI, 
 navigate to the online web console `> [username] > Copy Login Command > Display Token > Log in with this token`.
 
@@ -131,7 +127,7 @@ The command will look like this:
 oc login --token=[your-token] --server=https://api.[region].online-starter.openshift.com:[port]
 ----
 
-You will need to work on a project, which you can create by simply running the following command:
+You will need to create a project by simply running the following command:
 
 [role=command]
 ```
