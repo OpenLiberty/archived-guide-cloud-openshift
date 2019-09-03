@@ -43,15 +43,15 @@ Explore how to deploy microservices to Red Hat OpenShift.
 
 You will learn how to deploy two microservices in Open Liberty containers to an OpenShift cluster.
 
-There are different cloud-based solutions for running your workloads in a {kube} cluster. 
-A cloud-based infrastructure enables you to focus on developing your microservices without 
-worrying about details that are related to the servers you deploy them to. Using a cloud helps 
-you to easily scale and serve your microservices in a high-availability setup.
+There are different cloud-based solutions for running your {kube} workloads. 
+A cloud-based infrastructure enables you to focus on developing your microservices without worrying about 
+low-level infrastructure details for deployment. Using a cloud helps
+you to easily scale and manage your microservices in a high-availability setup.
 
-Kubernetes is an open source container orchestrator that automates many tasks that are involved in deploying, managing, and scaling containerized applications. 
+{kube} is an open source container orchestrator that automates many tasks that are involved in deploying, managing, and scaling containerized applications. 
 If you would like to learn more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^] guide.
 
-OpenShift is a Kubernetes-based platform with added functionality. It streamlines the DevOps process by providing an intuitive development pipeline, 
+OpenShift is a {kube}-based platform with added functionality. It streamlines the DevOps process by providing an intuitive development pipeline, 
 as well as provides integration with multiple tools to make the deployment and management of cloud applications easier.
 To learn more about the different platforms that Red Hat OpenShift offers, check out their https://docs.openshift.com[official documentation^]. 
 
@@ -93,9 +93,7 @@ You should get an output similar to:
 
 [role="no_copy"]
 ----
-oc v3.11.0+0cbc58b
-kubernetes v1.11.0+d4cacc0
-features: Basic-Auth
+Client Version: version.Info{Major:"4", Minor:"1+", GitVersion:"v4.1.14", ... }
 ----
 
 
@@ -118,7 +116,7 @@ Before you can deploy your microservices, you must gain access to a cluster on O
 
 Creating an OpenShift account will automatically grant you access to their multi-tenant, OpenShift cluster. 
 Once you have been granted access, you are also given access to their online web console. To login to OpenShift using the CLI, 
-navigate to the online web console `> [username] > Copy Login Command > Display Token > Log in with this token`.
+navigate to the online web console `[username] > Copy Login Command > Display Token > Log in with this token`.
 
 The command will look like this:
 
@@ -225,7 +223,7 @@ You can store your Docker credentials in a custom external credentials store, wh
 If you are using a custom credentials store for securing your registry credentials, or if you are unsure, you will need to use the following command:
 
 ****
-[system]#*{mac} & {linux}*#
+[system]#*{mac} | {linux}*#
 
 [role=command]
 ```
@@ -257,7 +255,7 @@ be displayed after running the `oc registry login` command, it will be formatted
 
 [role="no_copy"]
 ----
-default-route-openshift-image-registry.apps.[region].online-starter.openshift.com
+default-route-openshift-image-registry.apps.[region].starter.openshift-online.com
 ----
 
 You can also view the registry address by running the following command:
@@ -270,7 +268,7 @@ oc registry info
 Ensure that you are logged in to OpenShift as well as the registry, now run the following commands to tag your applications:
 
 ****
-[system]#*{mac} & {linux}*#
+[system]#*{mac} | {linux}*#
 [role=command]
 ```
 docker tag system:1.0-SNAPSHOT `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
@@ -300,7 +298,7 @@ docker tag inventory:1.0-SNAPSHOT [oc registry info]/[oc project -q]/inventory:1
 Finally, push your images to the registry:
 
 ****
-[system]#*{mac} & {linux}*#
+[system]#*{mac} | {linux}*#
 
 [role=command]
 ```
@@ -419,7 +417,7 @@ oc get routes
 ```
 
 They can also be found in the web console under `Networking > Routes > Location`. 
-The hostnames will be formatted like so `inventory-route-[project-name].apps.[region].online-starter.openshift.com`. Ensure that
+The hostnames will be formatted like so `inventory-route-[project-name].apps.[region].starter.openshift-online.com`. Ensure that
 you are in your project, not the default, which is shown in the upper-left corner of the web console.
 
 To access your microservices, point your browser to the following URLs, substituting the appropriate hostnames

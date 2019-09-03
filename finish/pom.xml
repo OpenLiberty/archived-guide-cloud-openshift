@@ -215,22 +215,21 @@
                                     <include>**/it/**</include>
                                 </includes>
                                 <systemPropertyVariables>
-                                    <cluster.ip>${cluster.ip}</cluster.ip>
-                                    <system.ingress.path>
-                                        ${system.ingress.path}
-                                    </system.ingress.path>
-                                    <system.node.port>
-                                        ${system.node.port}
-                                    </system.node.port>
                                     <system.kube.service>
                                         ${system.kube.service}
                                     </system.kube.service>
+                                    <system.ip>
+                                        ${system.ip}
+                                    </system.ip>
+                                    <inventory.ip>
+                                        $(inventory.ip)
+                                    </inventory.ip>
+                                    <system.ingress.path>
+                                        ${system.ingress.path}
+                                    </system.ingress.path>
                                     <inventory.ingress.path>
                                         ${inventory.ingress.path}
                                     </inventory.ingress.path>
-                                    <inventory.node.port>
-                                        ${inventory.node.port}
-                                    </inventory.node.port>
                                 </systemPropertyVariables>
                             </configuration>
                         </execution>
