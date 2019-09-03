@@ -33,15 +33,15 @@ import org.apache.cxf.jaxrs.provider.jsrjsonp.JsrJsonpProvider;
 public class SystemEndpointTest {
 
     private static String clusterUrl;
+    private static String sysIP;
 
     private Client client;
     private Response response;
 
     @BeforeClass
     public static void oneTimeSetup() {
-        String clusterIp = System.getProperty("cluster.ip");
-        String nodePort = System.getProperty("system.node.port");
-        clusterUrl = "http://" + clusterIp + ":" + nodePort + "/system/properties/";
+        String sysIP = System.getProperty("system.ip");
+        clusterUrl = "http://" + sysIP + "/system/properties/";
     }
     
     @Before
