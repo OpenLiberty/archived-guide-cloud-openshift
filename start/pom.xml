@@ -209,6 +209,9 @@
                                     <include>**/it/**</include>
                                 </includes>
                                 <systemPropertyVariables>
+                                    <system.kube.service>
+                                        ${system.kube.service}
+                                    </system.kube.service>
                                     <system.ip>
                                         ${system.ip}
                                     </system.ip>
