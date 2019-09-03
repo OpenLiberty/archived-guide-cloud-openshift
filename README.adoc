@@ -160,15 +160,6 @@ If you're familiar with Maven and Docker, you might be tempted to run a Maven bu
 use the `.war` file to build a Docker image. The projects are setup such that this process is automated
 as a part of a single Maven build. 
 
-****
-[system]#*{win}*#
-
-On the Docker Desktop General Setting page, ensure that the option `Expose daemon on 
-tcp://localhost:2375 without TLS` is enabled. This configuration is required by the `dockerfile-maven` 
-part of the build.
-
-****
-
 To build these microservices, navigate to the `start` directory and run the following command:
 
 [role=command]
@@ -330,6 +321,20 @@ docker push [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
 docker push [oc registry info]/[oc project -q]/inventory:1.0-SNAPSHOT
 ```
 ****
+
+Once pushed, run the following command to list the images pushed to the internal OCR:
+[role=command]
+```
+oc get imagestream
+```
+
+Verify that the `system` and `inventory` images are listed among them, for example:
+[role="no_copy"]
+----
+NAME        IMAGE REPOSITORY                                                                                     TAGS           UPDATED
+inventory   default-route-openshift-image-registry.apps.us-west-1.starter.openshift-online.com/guide/inventory   1.0-SNAPSHOT   3 seconds ago
+system      default-route-openshift-image-registry.apps.us-west-1.starter.openshift-online.com/guide/system      1.0-SNAPSHOT   17 seconds ago
+----
 
 // =================================================================================================
 // Deploying the microservices
