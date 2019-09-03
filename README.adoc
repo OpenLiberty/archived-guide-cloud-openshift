@@ -170,16 +170,22 @@ part of the build.
 
 ****
 
-Navigate to the `start` directory and run the following command:
+To build these microservices, navigate to the `start` directory and run the following command:
 
 [role=command]
 ```
 mvn package
 ```
 
-The `package` goal automatically starts the `dockerfile-maven:build` goal. It runs during the
-`package` phase. This goal builds a Docker image from the Dockerfile that is located in the same directory
-as the POM file.
+Next, run the `docker build` commands to build container images for your application:
+[role='command']
+```
+docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.
+```
+
+The `-t` flag in the `docker build` command allows the Docker image to be labeled (tagged) in the `name[:tag]` format. 
+The tag for an image describes the specific image version. If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
 
 During the build, you see various Docker messages that describe what images are being downloaded and
 built. When the build finishes, run the following command to list all local Docker images:
