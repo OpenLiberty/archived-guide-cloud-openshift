@@ -44,23 +44,21 @@ Explore how to deploy microservices to Red Hat OpenShift.
 You will learn how to deploy two microservices in Open Liberty containers to an OpenShift cluster.
 
 There are different cloud-based solutions for running your {kube} workloads. 
-A cloud-based infrastructure enables you to focus on developing your microservices without worrying about 
-low-level infrastructure details for deployment. Using a cloud helps
-you to easily scale and manage your microservices in a high-availability setup.
+With a cloud-based infrastructure, you can focus on developing your microservices without worrying about low-level infrastructure details for deployment. 
+Using a cloud helps you to easily scale and manage your microservices in a high-availability setup.
 
 {kube} is an open source container orchestrator that automates many tasks that are involved in deploying, managing, and scaling containerized applications. 
 If you would like to learn more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^] guide.
 
-OpenShift is a {kube}-based platform with added functionality. It streamlines the DevOps process by providing an intuitive development pipeline, 
-as well as provides integration with multiple tools to make the deployment and management of cloud applications easier.
+OpenShift is a Kubernetes-based platform with added functions. It streamlines the DevOps process by providing an intuitive development pipeline. 
+It also provides integration with multiple tools to make the deployment and management of cloud applications easier.
 To learn more about the different platforms that Red Hat OpenShift offers, check out their https://docs.openshift.com[official documentation^]. 
 
 The two microservices you will deploy are called `system` and `inventory`. 
 The `system` microservice returns the JVM system properties of the running container. 
 It also returns the pod’s name in the HTTP header, making replicas easy to distinguish 
 from each other. The `inventory` microservice adds the properties from the `system` microservice 
-to the inventory. This demonstrates how communication can be established between pods 
-inside a cluster.
+to the inventory. This process demonstrates how communication can be established between pods inside a cluster.
 
 // =================================================================================================
 // Prerequisites
@@ -72,15 +70,15 @@ Before you begin, the following tools need to be installed:
 
 - *Docker:* You need a containerization software for building containers. Kubernetes 
 supports various container types, but you will use Docker in this guide. For installation 
-instructions, refer to the official https://docs.docker.com/install/[Docker^] documentation.
+instructions, refer to the official https://docs.docker.com/install/[Docker documentation^].
 
 - *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift online account. To sign up, refer to the 
-https://manage.openshift.com/register/plan[official website^]. Keep in mind that the creation time depends on resource availability, 
+https://manage.openshift.com/register/plan[official website^]. Keep in mind that the creation time depends on resource availability 
 and may take some time.
 
 - *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
-https://docs.openshift.com/online/getting_started/beyond_the_basics.html#btb-installing-the-openshift-cli[OpenShift Online^] documentation.
+https://docs.openshift.com/online/getting_started/beyond_the_basics.html#btb-installing-the-openshift-cli[OpenShift Online documentation^].
 
 To verify that the OpenShift CLI is installed correctly, run the following command:
 
@@ -89,7 +87,7 @@ To verify that the OpenShift CLI is installed correctly, run the following comma
 oc version
 ```
 
-You should get an output similar to:
+The output will be similar to:
 
 [role="no_copy"]
 ----
@@ -114,18 +112,18 @@ include::{common-includes}/gitclone.adoc[]
 
 Before you can deploy your microservices, you must gain access to a cluster on OpenShift.
 
-Creating an OpenShift account will automatically grant you access to their multi-tenant, OpenShift cluster. 
-Once you have been granted access, you are also given access to their online web console. To login to OpenShift using the CLI, 
-navigate to the online web console `[username] > Copy Login Command > Display Token > Log in with this token`.
+Creating an OpenShift account automatically grants you access to their multi-tenant, OpenShift cluster. 
+After you have access, you are also given access to their online web console. To login to OpenShift by using the CLI, 
+navigate to the online web console by following the `[username] > Copy Login Command > Display Token > Log in with this token` path.
 
-The command will look like this:
+The command looks like the following example:
 
 [role="no_copy"]
 ----
 oc login --token=[your-token] --server=https://api.[region].online-starter.openshift.com:[port]
 ----
 
-You will need to create a project by simply running the following command:
+Create a project by running the following command:
 
 [role=command]
 ```
@@ -150,15 +148,15 @@ push them to a container registry, and then deploy them to your {kube} cluster.
 
 The first step of deploying to {kube} is to build your microservices and containerize them.
 
-The starting Java project, which you can find in the `start` directory, is a multi-module Maven
-project. It is made up of the `system` and `inventory` microservices. Each microservice resides in its own directory,
-`start/system` and `start/inventory`. Both of these directories contain a Dockerfile, which is necessary
-for building the Docker images. If you're unfamiliar with Dockerfiles, check out the
-https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide.
+The starting Java project, which is located in the start directory, is a multi-module Maven project. 
+It is made up of the `system` and `inventory` microservices. Each microservice resides in its own directory,
+`start/system` or `start/inventory`. Both of these directories contain a Dockerfile, which is necessary
+for building the Docker images. See the https://openliberty.io/guides/containerize.html[Containerizing microservices^] 
+guide if you're unfamiliar with Dockerfiles.
 
 If you're familiar with Maven and Docker, you might be tempted to run a Maven build first and then
-use the `.war` file to build a Docker image. The projects are setup such that this process is automated
-as a part of a single Maven build. 
+use the `.war` file to build a Docker image. The projects are set up so that this process is automated 
+as a part of a single Maven build.
 
 To build these microservices, navigate to the `start` directory and run the following command:
 
@@ -195,7 +193,7 @@ inventory                     1.0-SNAPSHOT
 open-liberty                  latest
 ----
 
-If you don't see the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images, then check the Maven
+If you don't see the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images, check the Maven
 build log for any potential errors.
 
 // =================================================================================================
@@ -205,8 +203,8 @@ build log for any potential errors.
 === Pushing the images to OpenShift's internal registry
 
 In order to run the microservices on the cluster, you need to push the microservice images into a container image registry. 
-In this guide you will use OpenShift's integrated container image registry called OpenShift Container Registry (OCR). 
-Once your images are pushed into the registry, you can use them in the pods you create later in the guide.
+You will use OpenShift's integrated container image registry called OpenShift Container Registry (OCR). 
+After your images are pushed into the registry, you can use them in the pods you create later in the guide.
 
 First, you must authenticate your Docker client to your OCR. Start by running the login command:
 
@@ -215,8 +213,8 @@ First, you must authenticate your Docker client to your OCR. Start by running th
 oc registry login
 ```
 
-You can store your Docker credentials in a custom external credentials store, which is more secure than using a Docker configuration file.
-If you are using a custom credentials store for securing your registry credentials, or if you are unsure, you will need to use the following command:
+You can store your Docker credentials in a custom external credential store, which is more secure than using a Docker configuration file. 
+If you are using a custom credential store for securing your registry credentials, or if you are unsure where your credentials are stored, use the following command:
 
 ****
 [system]#*{mac} | {linux}*#
@@ -230,7 +228,7 @@ docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
 ****
 [system]#*{win}*#
 
-Since the Windows Command Prompt doesn't support the command substitution as displayed above for Mac and Linux, you must run the following commands: 
+Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands: 
 [role=command]
 ```
 oc whoami
@@ -238,31 +236,27 @@ oc whoami -t
 oc registry info
 ```
 
-and replace the square brackets in the following `docker login` command with the results:
-
+Replace the square brackets in the following `docker login` command with the results from the previous commands:
 [role=command]
 ```
 docker login -u [oc whoami] -p [oc whoami -t] [oc registry info]
 ```
 ****
 
-The command authenticates you against the internal registry, allowing you to then be able to push and pull images. The registry address will 
-be displayed after running the `oc registry login` command, it will be formatted like so:
-
+The command authenticates your credentials against the internal registry so that you are able to push and pull images. 
+The registry address will be displayed after you run the `oc registry login` command. It is formatted similar to the following output:
 [role="no_copy"]
 ----
 default-route-openshift-image-registry.apps.[region].starter.openshift-online.com
 ----
 
 You can also view the registry address by running the following command:
-
 [role=command]
 ```
 oc registry info
 ```
 
-Ensure that you are logged in to OpenShift as well as the registry, now run the following commands to tag your applications:
-
+Ensure that you are logged in to OpenShift and the registry, and run the following commands to tag your applications:
 ****
 [system]#*{mac} | {linux}*#
 [role=command]
@@ -275,15 +269,14 @@ docker tag inventory:1.0-SNAPSHOT `oc registry info`/`oc project -q`/inventory:1
 ****
 [system]#*{win}*#
 
-Since the Windows Command Prompt doesn't support the command substitution as displayed above for Mac and Linux, you must run the following commands: 
+Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands:  
 [role=command]
 ```
 oc registry info
 oc project -q
 ```
 
-and replace the square brackets in the following `docker tag` commands with the results:
-
+Replace the square brackets in the following `docker tag` commands with the results from the previous commands:
 [role=command]
 ```
 docker tag system:1.0-SNAPSHOT [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
@@ -306,15 +299,14 @@ docker push `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
 ****
 [system]#*{win}*#
 
-Since the Windows Command Prompt doesn't support the command substitution as displayed above for Mac and Linux, you must run the following commands: 
+Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands:
 [role=command]
 ```
 oc registry info
 oc project -q
 ```
 
-and replace the square brackets in the following `docker push` commands with the results:
-
+Replace the square brackets in the following `docker push` commands with the results from the previous commands:
 [role=command]
 ```
 docker push [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
@@ -322,7 +314,7 @@ docker push [oc registry info]/[oc project -q]/inventory:1.0-SNAPSHOT
 ```
 ****
 
-Once pushed, run the following command to list the images pushed to the internal OCR:
+After you push the images, run the following command to list the images that you pushed to the internal OCR:
 [role=command]
 ```
 oc get imagestream
@@ -342,11 +334,11 @@ system      default-route-openshift-image-registry.apps.us-west-1.starter.opensh
 
 === Deploying the microservices
 
-Now that your container images are built, deploy them using a Kubernetes object configuration file.
+Now that your container images are built, deploy them by using a Kubernetes object configuration file.
 
-{kube} objects can be configured in a yaml file that contains a description of all your 
+{kube} objects can be configured in a YAML file that contains a description of all your 
 deployments, services, or any other objects that you want to deploy. All objects can 
-also be deleted from the cluster by using the same yaml file that you used to deploy them.
+also be deleted from the cluster by using the same YAML file that you used to deploy them.
 The [hotspot]`kubernetes.yaml` object configuration file is provided for you. If you are interested 
 in learning more about using and configuring Kubernetes clusters, check out the 
 https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^]
@@ -366,16 +358,16 @@ include::finish/kubernetes.yaml[]
 
 [role="edit_command_text"]
 The [hotspot=systemImage hotspot=inventoryImage]`image` is the name and tag of the container image that you want 
-to use for the container. The image address that is used is the OCR address that you logged in to, simply update the system 
+to use for the container. The image address is the OCR address that you logged in to. Update the system 
 [hotspot=systemImage]`image` and the inventory [hotspot=inventoryImage]`image` fields to include your project name.
 
-Run the following commands to deploy the objects as defined in kubernetes.yaml:
+Run the following commands to deploy the objects as defined in kubernetes.yaml file:
 [role='command']
 ```
 oc apply -f kubernetes.yaml
 ```
 
-You will see an output similar to the following:
+You see an output similar to the following example:
 
 [role="no_copy"]
 ----
@@ -393,7 +385,7 @@ When the apps are deployed, run the following command to check the status of you
 oc get pods
 ```
 
-If all the pods are healthy and running, you see an output similar to the following:
+If all the pods are healthy and running, you see an output similar to the following example:
 [source, role="no_copy"]
 ----
 NAME                                    READY     STATUS    RESTARTS   AGE
@@ -407,7 +399,7 @@ inventory-deployment-645767664f-nbtd9   1/1       Running   0          15s
 
 == Making requests to the microservices
 
-To access the services and therefore the application, you need to use a route. A route in OpenShift exposes a service at 
+To access the services and the application, use a route. A route in OpenShift exposes a service at 
 a hostname such as `www.your-web-app.com` so external users can access the application. 
 
 kubernetes.yaml
@@ -416,21 +408,21 @@ kubernetes.yaml
 include::finish/kubernetes.yaml[]
 ----
 
-Both the [hotspot=systemRoute]`system` and [hotspot=inventoryRoute]`inventory` routes were configured in the [hotspot]`kubernetes.yaml` 
-file, and both services were exposed when the `oc apply -f kubernetes.yaml` command was run.
+Both the [hotspot=systemRoute]`system` and [hotspot=inventoryRoute]`inventory` routes are configured in the [hotspot]`kubernetes.yaml` 
+file, and running the `oc apply -f kubernetes.yaml` command exposed both services.
 
-Your microservices can now be accessed through the hostnames which you can find by running the following command:
+Your microservices can now be accessed through the hostnames that you can find by running the following command:
 
 [role='command']
 ```
 oc get routes
 ```
 
-They can also be found in the web console under `Networking > Routes > Location`. 
-The hostnames will be formatted like so `inventory-route-[project-name].apps.[region].starter.openshift-online.com`. Ensure that
-you are in your project, not the default, which is shown in the upper-left corner of the web console.
+They can also be found in the web console by following the `Networking > Routes > Location` path. 
+Hostnames are in the `inventory-route-[project-name].apps.[region].starter.openshift-online.com` format. Ensure that
+you are in your project, not the `default` project, which is shown in the upper-left corner of the web console.
 
-To access your microservices, point your browser to the following URLs, substituting the appropriate hostnames
+To access your microservices, point your browser to the following URLs. Substitute the appropriate hostnames
 for the `system` and `inventory` services:
 
 - `http://[system-hostname]/system/properties/`
@@ -439,9 +431,9 @@ for the `system` and `inventory` services:
 In the first URL, you see a result in JSON format with the system properties of the container JVM. The second URL returns an empty list, 
 which is expected because no system properties are stored in the inventory yet.
 
-Point your browser to the `http://[inventory-hostname]/inventory/systems/system-service` URL. When you visit this URL, the system
+Point your browser to the `http://[inventory-hostname]/inventory/systems/system-service` URL. When you to go this URL, the system
 properties that are taken from the `system-service` are automatically stored in the inventory. Go back to `http://[inventory-hostname]/inventory/systems` 
-and you should see a new entry.
+and you see a new entry.
 
 // =================================================================================================
 // Testing the microservices
@@ -455,7 +447,7 @@ pom.xml
 include::finish/pom.xml[]
 ----
 
-A few tests are included for you to test the basic functionality of the microservices. 
+A few tests are included for you to test the basic functions of the microservices. 
 If a test failure occurs, then you might have introduced a bug into the code. 
 To run the tests, wait for all pods to be in the ready state before you proceed further. 
 The default properties that are defined in the [hotspot]`pom.xml` file are:
@@ -463,9 +455,9 @@ The default properties that are defined in the [hotspot]`pom.xml` file are:
 [cols="15, 100", options="header"]
 |===
 | *Property*                                            | *Description*
-| [hotspot=systemIP]`system.ip`                         | IP or hostname of the {kube} Service `system-service`
-| [hotspot=inventoryIP]`inventory.ip`                   | IP or hostname of the {kube} Service `inventory-service`
-| [hotspot=systemKubeService]`system.kube.service`      | Name of the {kube} Service wrapping the `system` pods, `system-service` by default.
+| [hotspot=systemIP]`system.ip`                         | IP or hostname of the `system-service` {kube} Service
+| [hotspot=inventoryIP]`inventory.ip`                   | IP or hostname of the `inventory-service` {kube} Service
+| [hotspot=systemKubeService]`system.kube.service`      | Name of the {kube} Service wrapping the `system` pods, `system-service` by default
 |===
 
 Use the following command to run the integration tests against your cluster. Substitute 
@@ -482,7 +474,7 @@ mvn verify -Ddockerfile.skip=true \
 - The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
 - The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
 
-If the tests pass, you see an output for each service similar to the following:
+If the tests pass, you see an output for each service similar to the following example:
 
 [source, role="no_copy"]
 ----
@@ -532,7 +524,7 @@ oc delete imagestream/inventory
 oc delete imagestream/system
 ```
 
-And finally, you can delete the project by running the following command:
+Finally, you can delete the project by running the following command:
 
 [role='command']
 ```
@@ -545,7 +537,7 @@ oc delete project [project-name]
 
 == Great work! You're done!
 
-You have just deployed two microservices running in Open Liberty to OpenShift. You also 
+You just deployed two microservices running in Open Liberty to OpenShift. You also 
 learned how to use `oc` to deploy your microservices on a {kube} cluster.
 
 // Multipane
