@@ -64,9 +64,9 @@ to the inventory. This process demonstrates how communication can be established
 // Prerequisites
 // =================================================================================================
 
-== Prerequisites
+== Additional prerequisites
 
-Before you begin, the following tools need to be installed:
+Before you begin, the following additional tools need to be installed:
 
 - *Docker:* You need a containerization software for building containers. Kubernetes 
 supports various container types, but you will use Docker in this guide. For installation 
