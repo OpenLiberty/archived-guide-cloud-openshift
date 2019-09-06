@@ -10,7 +10,7 @@
 :projectid: cloud-openshift
 :page-layout: guide-multipane
 :page-duration: 30 minutes 
-:page-releasedate: 2019-05-29
+:page-releasedate: 2019-09-09
 :page-description: Explore how to deploy microservices to Red Hat OpenShift
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
