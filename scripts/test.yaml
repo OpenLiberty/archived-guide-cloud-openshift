@@ -47,7 +47,7 @@ metadata:
 spec:
   selector:
     app: system
-  portos:
+  ports:
   - protocol: TCP
     port: 9080
 ---
