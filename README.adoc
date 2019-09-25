@@ -15,7 +15,7 @@
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
-:common-includes: ../guides-common/
+:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
 :page-seo-title: Deploying microservices to Red Hat OpenShift 
 :page-seo-description: A tutorial on how to deploy microservices to OpenShift using OpenShift Container Registry (OCR) as a container registry. 
@@ -216,18 +216,18 @@ oc registry login
 You can store your Docker credentials in a custom external credential store, which is more secure than using a Docker configuration file. 
 If you are using a custom credential store for securing your registry credentials, or if you are unsure where your credentials are stored, use the following command:
 
-****
-[system]#*{mac} | {linux}*#
+include::{common-includes}/os-tabs.adoc[]
 
+[.tab_content.mac_section.linux_section]
+--
 [role=command]
 ```
 docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
 ```
-****
+--
 
-****
-[system]#*{win}*#
-
+[.tab_content.windows_section]
+--
 Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands: 
 [role=command]
 ```
@@ -241,7 +241,7 @@ Replace the square brackets in the following `docker login` command with the res
 ```
 docker login -u [oc whoami] -p [oc whoami -t] [oc registry info]
 ```
-****
+--
 
 The command authenticates your credentials against the internal registry so that you are able to push and pull images. 
 The registry address will be displayed after you run the `oc registry login` command. It is formatted similar to the following output:
@@ -257,18 +257,20 @@ oc registry info
 ```
 
 Ensure that you are logged in to OpenShift and the registry, and run the following commands to tag your applications:
-****
-[system]#*{mac} | {linux}*#
+
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.mac_section.linux_section]
+--
 [role=command]
 ```
 docker tag system:1.0-SNAPSHOT `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
 docker tag inventory:1.0-SNAPSHOT `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
 ```
-****
+--
 
-****
-[system]#*{win}*#
-
+[.tab_content.windows_section]
+--
 Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands:  
 [role=command]
 ```
@@ -282,23 +284,23 @@ Replace the square brackets in the following `docker tag` commands with the resu
 docker tag system:1.0-SNAPSHOT [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
 docker tag inventory:1.0-SNAPSHOT [oc registry info]/[oc project -q]/inventory:1.0-SNAPSHOT
 ```
-****
+--
 
 Finally, push your images to the registry:
 
-****
-[system]#*{mac} | {linux}*#
+include::{common-includes}/os-tabs.adoc[]
 
+[.tab_content.mac_section.linux_section]
+--
 [role=command]
 ```
 docker push `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
 docker push `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
 ```
-****
+--
 
-****
-[system]#*{win}*#
-
+[.tab_content.windows_section]
+--
 Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands:
 [role=command]
 ```
@@ -312,7 +314,7 @@ Replace the square brackets in the following `docker push` commands with the res
 docker push [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
 docker push [oc registry info]/[oc project -q]/inventory:1.0-SNAPSHOT
 ```
-****
+--
 
 After you push the images, run the following command to list the images that you pushed to the internal OCR:
 [role=command]
