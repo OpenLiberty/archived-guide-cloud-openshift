@@ -78,7 +78,7 @@ and may take some time.
 
 - *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
-https://docs.openshift.com/online/getting_started/beyond_the_basics.html#btb-installing-the-openshift-cli[OpenShift Online documentation^].
+https://docs.openshift.com/online/starter/cli_reference/openshift_cli/getting-started-cli.html[OpenShift Online documentation^].
 
 To verify that the OpenShift CLI is installed correctly, run the following command:
 
