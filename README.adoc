@@ -221,7 +221,7 @@ include::{common-includes}/os-tabs.adoc[]
 --
 [role=command]
 ```
-docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
+echo $(oc whoami -t) | docker login -u developer --password-stdin $(oc registry info)
 ```
 --
 
@@ -263,8 +263,8 @@ include::{common-includes}/os-tabs.adoc[]
 --
 [role=command]
 ```
-docker tag system:1.0-SNAPSHOT `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
-docker tag inventory:1.0-SNAPSHOT `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
+docker tag system:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/system:1.0-SNAPSHOT
+docker tag inventory:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
 ```
 --
 
@@ -293,8 +293,8 @@ include::{common-includes}/os-tabs.adoc[]
 --
 [role=command]
 ```
-docker push `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
-docker push `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
+docker push $(oc registry info)/$(oc project -q)/system:1.0-SNAPSHOT
+docker push $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
 ```
 --
 
