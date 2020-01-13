@@ -270,7 +270,7 @@ docker tag inventory:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/inventory
 
 [.tab_content.windows_section]
 --
-Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands:  
+Run the following commands:  
 [role=command]
 ```
 oc registry info
@@ -300,7 +300,7 @@ docker push $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
 
 [.tab_content.windows_section]
 --
-Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands:
+Run the following commands:
 [role=command]
 ```
 oc registry info
