@@ -89,7 +89,7 @@ The output will be similar to:
 
 [role="no_copy"]
 ----
-Client Version: version.Info{Major:"4", Minor:"1+", GitVersion:"v4.1.14", ... }
+oc v3.11.0+0cbc58b
 ----
 
 
