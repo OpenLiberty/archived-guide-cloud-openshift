@@ -16,7 +16,7 @@ spec:
       containers:
       - name: system-container
         # tag::systemImage[]
-        image: image-registry.openshift-image-registry.svc:5000/devmode/system:1.0-SNAPSHOT
+        image: image-registry.openshift-image-registry.svc:5000/[project-name]/system:1.0-SNAPSHOT
         # end::systemImage[]
         ports:
         - containerPort: 9080
@@ -39,7 +39,7 @@ spec:
       containers:
       - name: inventory-container
         # tag::inventoryImage[]
-        image: image-registry.openshift-image-registry.svc:5000/devmode/inventory:1.0-SNAPSHOT
+        image: image-registry.openshift-image-registry.svc:5000/[project-name]/inventory:1.0-SNAPSHOT
         # end::inventoryImage[]
         ports:
         - containerPort: 9080

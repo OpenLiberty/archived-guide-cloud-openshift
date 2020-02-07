@@ -1,3 +1,6 @@
-FROM open-liberty
+FROM open-liberty:kernel
 
-ADD --chown=1001:0 target/inventory.tar.gz /opt/ol
+COPY --chown=1001:0 src/main/liberty/config /config/
+COPY --chown=1001:0 target/inventory.war /config/apps
+
+RUN configure.sh
