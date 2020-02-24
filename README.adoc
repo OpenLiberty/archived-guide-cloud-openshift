@@ -16,8 +16,8 @@
 :page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
-:page-seo-title: Deploying microservices to Red Hat OpenShift 
-:page-seo-description: A tutorial on how to deploy microservices to OpenShift using OpenShift Container Registry (OCR) as a container registry. 
+:page-seo-title: Deploying Java microservices to Red Hat OpenShift 
+:page-seo-description: A getting started tutorial with examples on how to deploy Java microservices to a Kubernetes cluster on OpenShift using OpenShift Container Registry (OCR). 
 :guide-author: Open Liberty
 = Deploying microservices to OpenShift
 
