@@ -1,5 +1,4 @@
-//
-// Copyright (c) 2019 IBM Corporation and others.
+// Copyright (c) 2019, 2020 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -17,8 +16,8 @@
 :page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
-:page-seo-title: Deploying microservices to Red Hat OpenShift 
-:page-seo-description: A tutorial on how to deploy microservices to OpenShift using OpenShift Container Registry (OCR) as a container registry. 
+:page-seo-title: Deploying Java microservices to Red Hat OpenShift 
+:page-seo-description: A getting started tutorial with examples on how to deploy Java microservices to a Kubernetes cluster on OpenShift using OpenShift Container Registry (OCR). 
 :guide-author: Open Liberty
 = Deploying microservices to OpenShift
 
@@ -90,7 +89,7 @@ The output will be similar to:
 
 [role="no_copy"]
 ----
-Client Version: version.Info{Major:"4", Minor:"1+", GitVersion:"v4.1.14", ... }
+oc v3.11.0+0cbc58b
 ----
 
 
@@ -221,7 +220,7 @@ include::{common-includes}/os-tabs.adoc[]
 --
 [role=command]
 ```
-docker login -u `oc whoami` -p `oc whoami -t` `oc registry info`
+echo $(oc whoami -t) | docker login -u developer --password-stdin $(oc registry info)
 ```
 --
 
@@ -263,14 +262,14 @@ include::{common-includes}/os-tabs.adoc[]
 --
 [role=command]
 ```
-docker tag system:1.0-SNAPSHOT `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
-docker tag inventory:1.0-SNAPSHOT `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
+docker tag system:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/system:1.0-SNAPSHOT
+docker tag inventory:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
 ```
 --
 
 [.tab_content.windows_section]
 --
-Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands:  
+Run the following commands:   
 [role=command]
 ```
 oc registry info
@@ -293,14 +292,14 @@ include::{common-includes}/os-tabs.adoc[]
 --
 [role=command]
 ```
-docker push `oc registry info`/`oc project -q`/system:1.0-SNAPSHOT
-docker push `oc registry info`/`oc project -q`/inventory:1.0-SNAPSHOT
+docker push $(oc registry info)/$(oc project -q)/system:1.0-SNAPSHOT
+docker push $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
 ```
 --
 
 [.tab_content.windows_section]
 --
-Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands:
+Run the following commands:
 [role=command]
 ```
 oc registry info
@@ -432,9 +431,9 @@ for the `system` and `inventory` services:
 In the first URL, you see a result in JSON format with the system properties of the container JVM. The second URL returns an empty list, 
 which is expected because no system properties are stored in the inventory yet.
 
-Point your browser to the `http://[inventory-hostname]/inventory/systems/system-service` URL. When you to go this URL, the system
-properties that are taken from the `system-service` are automatically stored in the inventory. Go back to `http://[inventory-hostname]/inventory/systems` 
-and you see a new entry.
+Point your browser to the `http://[inventory-hostname]/inventory/systems/[system-hostname]` URL. When you to go this URL, the system
+properties that are taken from the `system` service are automatically stored in the inventory. Revisit the 
+`http://[inventory-hostname]/inventory/systems` URL and you see a new entry.
 
 // =================================================================================================
 // Testing the microservices
@@ -445,7 +444,7 @@ and you see a new entry.
 pom.xml
 [source, xml, linenums, role='code_column']
 ----
-include::finish/pom.xml[]
+include::finish/inventory/pom.xml[]
 ----
 
 A few tests are included for you to test the basic functions of the microservices. 
@@ -458,7 +457,6 @@ The default properties that are defined in the [hotspot]`pom.xml` file are:
 | *Property*                                            | *Description*
 | [hotspot=systemIP]`system.ip`                         | IP or hostname of the `system-service` {kube} Service
 | [hotspot=inventoryIP]`inventory.ip`                   | IP or hostname of the `inventory-service` {kube} Service
-| [hotspot=systemKubeService]`system.kube.service`      | Name of the {kube} Service wrapping the `system` pods, `system-service` by default
 |===
 
 Use the following command to run the integration tests against your cluster. Substitute 
@@ -466,12 +464,11 @@ Use the following command to run the integration tests against your cluster. Sub
 
 [role=command]
 ```
-mvn verify -Ddockerfile.skip=true \
+mvn verify \
 -Dsystem.ip=system-route-[project-name].apps.[region].starter.openshift-online.com  \
 -Dinventory.ip=inventory-route-[project-name].apps.[region].starter.openshift-online.com
 ```
 
-- The `dockerfile.skip` parameter is set to `true` to skip building a new container image.
 - The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
 - The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
 
@@ -482,8 +479,8 @@ If the tests pass, you see an output for each service similar to the following e
 -------------------------------------------------------
  T E S T S
 -------------------------------------------------------
-Running it.io.openliberty.guides.system.SystemEndpointTest
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.673 sec - in it.io.openliberty.guides.system.SystemEndpointTest
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.673 sec - in it.io.openliberty.guides.system.SystemEndpointIT
 
 Results:
 
@@ -495,12 +492,12 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 -------------------------------------------------------
  T E S T S
 -------------------------------------------------------
-Running it.io.openliberty.guides.inventory.InventoryEndpointTest
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.222 sec - in it.io.openliberty.guides.inventory.InventoryEndpointTest
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.222 sec - in it.io.openliberty.guides.inventory.InventoryEndpointIT
 
 Results:
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
 ----
 
 // =================================================================================================
