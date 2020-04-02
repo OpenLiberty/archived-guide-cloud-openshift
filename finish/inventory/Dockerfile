@@ -1,4 +1,21 @@
-FROM openliberty/open-liberty:kernel-java8-openj9-ubi
+# our base build image
+FROM maven:3.6-jdk-8 AS builder
+
+# copy the project files
+COPY pom.xml .
+
+# build all dependencies
+RUN mvn -ntp dependency:go-offline
+
+# copy your other files
+COPY ./src ./src
+
+# build for release
+RUN mvn -ntp liberty:install-server liberty:create package
+
+##########################################################################
+
+FROM openliberty/open-liberty:kernel-java8-openj9-ubi AS runner
 
 ARG VERSION=1.0
 ARG REVISION=SNAPSHOT
@@ -16,7 +33,6 @@ LABEL \
   summary="The inventory microservice from the Deploying microservices to OpenShift guide" \
   description="This image contains the inventory microservice running with the Open Liberty runtime."
 
-COPY --chown=1001:0 src/main/liberty/config /config/
-COPY --chown=1001:0 target/inventory.war /config/apps
-
-RUN configure.sh
+# copy necessary server files to final image
+COPY --from=builder --chown=1001:0 src/main/liberty/config /config/
+COPY --from=builder --chown=1001:0 target/inventory.war /config/apps
