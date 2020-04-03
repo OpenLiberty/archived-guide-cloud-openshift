@@ -1,0 +1,12 @@
+apiVersion: openliberty.io/v1beta1
+kind: OpenLibertyApplication
+metadata:
+  name: system
+spec:
+  applicationImage: default-route-openshift-image-registry.apps.testguide.cp.fyre.ibm.com/guide/system-service
+  pullPolicy: Always
+  expose: true
+  service:
+    provides:
+      category: openapi
+      context: /system/properties
