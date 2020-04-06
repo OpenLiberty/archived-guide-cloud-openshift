@@ -22,4 +22,4 @@ spec:
   service:
     consumes:
     - category: openapi
-        name: system
+      name: system
