@@ -16,10 +16,10 @@ kind: OpenLibertyApplication
 metadata:
     name: inventory
 spec:
-    applicationImage: default-route-openshift-image-registry.apps.testguide.cp.fyre.ibm.com/guide/inventory
-    pullPolicy: Always
-    expose: true
-    service:
-      consumes:
-        category: openapi
-          name: system
+  applicationImage: default-route-openshift-image-registry.apps.testguide.cp.fyre.ibm.com/guide/inventory
+  pullPolicy: Always
+  expose: true
+  service:
+    consumes:
+      category: openapi
+        name: system
