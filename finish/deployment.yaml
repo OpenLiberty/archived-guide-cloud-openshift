@@ -21,5 +21,5 @@ spec:
   expose: true
   service:
     consumes:
-      category: openapi
+    - category: openapi
         name: system
