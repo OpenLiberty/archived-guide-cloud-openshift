@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<?xml version='1.0' encoding='utf-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.openliberty.guides</groupId>
@@ -10,77 +8,90 @@
     <packaging>war</packaging>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!-- Plugin versions -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Plugins -->
         <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
         <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
-        <version.maven-failsafe-plugin>2.22.2</version.maven-failsafe-plugin>
         <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
-        <!-- OpenLiberty runtime -->
-        <http.port>9080</http.port>
-        <https.port>9443</https.port>
-        <!-- Default test properties -->
-        <!-- tag::systemIP[] -->
-        <system.ip>localhost:9090</system.ip>
-        <!-- end::systemIP[] -->
-        <!-- tag::inventoryIP[] -->
-        <inventory.ip>localhost:9080</inventory.ip>
-        <!-- end::inventoryIP[] -->
+        <version.maven-failsafe-plugin>2.22.2</version.maven-failsafe-plugin>
+        <!-- Liberty configuration -->
+        <liberty.var.default.http.port>9085</liberty.var.default.http.port>
+        <liberty.var.default.https.port>9448</liberty.var.default.https.port>
     </properties>
-
+    
     <dependencies>
-
+        <!-- Provided dependencies -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
             <version>8.0.0</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-api</artifactId>
-            <version>1.3</version>
+            <groupId>javax.enterprise.concurrent</groupId>
+            <artifactId>javax.enterprise.concurrent-api</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>3.2</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
+            <artifactId>microprofile-reactive-messaging-api</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!--  Required dependencies -->
+        <dependency>
+           <groupId>io.openliberty.guides</groupId>
+           <artifactId>models</artifactId>
+           <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.4.0</version>
         </dependency>
 
         <!-- For tests -->
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-client</artifactId>
-            <version>3.3.4</version>
+            <groupId>org.microshed</groupId>
+            <artifactId>microshed-testing-liberty</artifactId>
+            <version>0.8</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-extension-providers</artifactId>
-            <version>3.3.4</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>1.12.5</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1.4</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.5.2</version>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.6.0</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.30</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -98,14 +109,14 @@
                 <version>${version.liberty-maven-plugin}</version>
             </plugin>
 
-            <!-- For unit tests -->
+            <!-- Plugin to run unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${version.maven-surefire-plugin}</version>
             </plugin>
 
-            <!-- For integration tests -->
+            <!-- Plugin to run integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -119,7 +130,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

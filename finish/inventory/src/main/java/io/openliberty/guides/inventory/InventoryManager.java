@@ -1,6 +1,6 @@
 // tag::copyright[]
 /*******************************************************************************
- * Copyright (c) 2017, 2020 IBM Corporation and others.
+ * Copyright (c) 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,35 +12,46 @@
 // end::copyright[]
 package io.openliberty.guides.inventory;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
-import io.openliberty.guides.inventory.model.InventoryList;
-import io.openliberty.guides.inventory.model.SystemData;
+import java.util.TreeMap;
+
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class InventoryManager {
 
-  private List<SystemData> systems = Collections.synchronizedList(new ArrayList<>());
+    private Map<String, Properties> systems = Collections.synchronizedMap(new TreeMap<String, Properties>());
 
-  public void add(String hostname, Properties systemProps) {
-    Properties props = new Properties();
-    props.setProperty("os.name", systemProps.getProperty("os.name"));
-    props.setProperty("user.name", systemProps.getProperty("user.name"));
-
-    SystemData system = new SystemData(hostname, props);
-    if (!systems.contains(system)) {
-      systems.add(system);
+    public void addSystem(String hostId, Double systemLoad) {
+        if (!systems.containsKey(hostId)) {
+            Properties p = new Properties();
+            p.put("hostname", hostId);
+            p.put("systemLoad", systemLoad);
+            systems.put(hostId, p);
+        }
     }
-  }
 
-  public void reset() {
-    systems.clear();
-  }
+    public void updateCpuStatus(String hostId, Double systemLoad) {
+        Optional<Properties> p = getSystem(hostId);
+        if (p.isPresent()) {
+            if (p.get().getProperty(hostId) == null && hostId != null)
+                p.get().put("systemLoad", systemLoad);
+        }
+    }
 
-  public InventoryList list() {
-    return new InventoryList(systems);
-  }
+    public Optional<Properties> getSystem(String hostId) {
+        Properties p = systems.get(hostId);
+        return Optional.ofNullable(p);
+    }
+
+    public Map<String, Properties> getSystems() {
+        return new TreeMap<>(systems);
+    }
+
+    public void resetSystems() {
+        systems.clear();
+    }
 }
