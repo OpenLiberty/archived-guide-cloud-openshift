@@ -2,3 +2,6 @@ kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
   name: "system"
+spec:
+  strategy:
+    type: Docker
