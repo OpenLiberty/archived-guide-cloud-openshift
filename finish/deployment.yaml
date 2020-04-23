@@ -3,7 +3,7 @@ kind: OpenLibertyApplication
 metadata:
   name: system
 spec:
-  applicationImage: default-route-openshift-image-registry.apps.guide.cp.fyre.ibm.com/guide/system
+  applicationImage: default-route-openshift-image-registry.apps.testguide.cp.fyre.ibm.com/guide/system
   pullPolicy: Always
 ---
 apiVersion: openliberty.io/v1beta1
@@ -11,5 +11,5 @@ kind: OpenLibertyApplication
 metadata:
     name: inventory
 spec:
-  applicationImage: default-route-openshift-image-registry.apps.guide.cp.fyre.ibm.com/guide/inventory
+  applicationImage: default-route-openshift-image-registry.apps.testguide.cp.fyre.ibm.com/guide/inventory
   pullPolicy: Always
