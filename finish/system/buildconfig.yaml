@@ -3,5 +3,8 @@ apiVersion: build.openshift.io/v1
 metadata:
   name: "system"
 spec:
+  source:
+    binary: {}
+    type: Binary
   strategy:
     type: Docker
