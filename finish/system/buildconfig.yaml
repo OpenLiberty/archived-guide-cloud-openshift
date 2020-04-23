@@ -1,10 +1,21 @@
-kind: BuildConfig
-apiVersion: build.openshift.io/v1
+kind: Template
 metadata:
-  name: "system"
-spec:
-  source:
-    binary: {}
-    type: Binary
-  strategy:
-    type: Docker
+  name: "system-build-template"
+objects:
+  kind: ImageStream
+  metadata:
+    name: "system"
+    labels:
+      application: "system"
+  kind: BuildConfig
+  apiVersion: build.openshift.io/v1
+  metadata:
+    name: "system"
+    labels:
+      build: "system"
+  spec:
+    source:
+      binary: {}
+      type: Binary
+    strategy:
+      type: Docker
