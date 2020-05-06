@@ -14,11 +14,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!-- Plugin versions -->
-        <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
-        <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
-        <version.maven-failsafe-plugin>2.22.2</version.maven-failsafe-plugin>
-        <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
         <!-- OpenLiberty runtime -->
         <http.port>9080</http.port>
         <https.port>9443</https.port>
@@ -84,7 +79,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>${version.maven-war-plugin}</version>
+                <version>3.2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <packagingExcludes>pom.xml</packagingExcludes>
@@ -95,21 +90,21 @@
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>${version.liberty-maven-plugin}</version>
+                <version>3.2</version>
             </plugin>
 
             <!-- For unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${version.maven-surefire-plugin}</version>
+                <version>2.22.2</version>
             </plugin>
 
             <!-- For integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${version.maven-failsafe-plugin}</version>
+                <version>2.22.2</version>
                 <executions>
                     <execution>
                         <goals>
