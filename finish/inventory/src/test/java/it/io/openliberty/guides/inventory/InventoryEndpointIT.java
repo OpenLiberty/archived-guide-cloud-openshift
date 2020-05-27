@@ -14,6 +14,7 @@ package it.io.openliberty.guides.inventory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
@@ -148,14 +149,18 @@ public class InventoryEndpointIT {
         this.assertResponse(invUrl, response);
 
         Response badResponse = client.target(invUrl + "badhostname")
-            .request(MediaType.APPLICATION_JSON)
-            .get();
+            .request(MediaType.APPLICATION_JSON).get();
 
-        String obj = badResponse.readEntity(String.class);
-
-        boolean isError = obj.contains("ERROR");
-        assertTrue(isError,
-                "badhostname is not a valid host but it didn't raise an error");
+        assertEquals(404, badResponse.getStatus(),
+        "BadResponse expected status: 404. Response code not as expected.");
+    
+        String stringObj = badResponse.readEntity(String.class);
+        assertEquals("{}", stringObj, "Response entity is not as expected.");
+    
+        try {
+            JsonObject jsonObj = badResponse.readEntity(JsonObject.class);
+            fail("Object should not be able to be read as JSON object");
+        } catch (Exception e) {}
 
         response.close();
         badResponse.close();
