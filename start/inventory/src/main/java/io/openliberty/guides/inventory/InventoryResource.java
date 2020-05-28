@@ -43,7 +43,7 @@ public class InventoryResource {
     Properties props = systemClient.getProperties(hostname);
     if (props == null) {
       return Response.status(Response.Status.NOT_FOUND)
-                      .entity("{ \"ERROR\" : \"Unknown hostname or the system service" 
+                      .entity("{ \"ERROR\" : \"Unknown hostname or the system service " 
                       + "may not be running on " + hostname + "\" }")
                       .build();
     }
