@@ -30,8 +30,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import jdk.nashorn.api.scripting.JSObject;
-
 public class InventoryEndpointIT {
 
     private static String sysHostname;
@@ -156,7 +154,8 @@ public class InventoryEndpointIT {
         "BadResponse expected status: 404. Response code not as expected.");
         
         String stringObj = badResponse.readEntity(String.class);
-        assertTrue(stringObj.contains("error"), "Response entity is not as expected.");
+        assertTrue(stringObj.contains("ERROR"), 
+        "badhostname is not a valid host but it didn't raise an error");
 
         response.close();
         badResponse.close();
