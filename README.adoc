@@ -89,7 +89,8 @@ The output will be similar to:
 
 [role="no_copy"]
 ----
-oc v3.11.0+0cbc58b
+Client Version: 4.3.13
+Server Version: 4.3.13
 ----
 
 
