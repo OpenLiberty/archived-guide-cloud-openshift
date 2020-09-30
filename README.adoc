@@ -65,34 +65,45 @@ to the inventory. This process demonstrates how communication can be established
 
 == Additional prerequisites
 
-Before you begin, the following additional tools need to be installed:
+Before you can deploy your microservices, you must gain access to a cluster on OpenShift and have an OpenShift client installed. 
 
-- *Docker:* You need a containerization software for building containers. Kubernetes 
-supports various container types, but you will use Docker in this guide. For installation 
-instructions, refer to the official https://docs.docker.com/install/[Docker documentation^].
+There are various OpenShift offerings. You can use the https://learn.openshift.com/playgrounds/openshift44[online playground^], which provides
+free access to an OpenShift cluster for 60 minutes, gain access to an OpenShift cluster hosted on
+https://www.openshift.com/products/openshift-ibm-cloud[IBM cloud^], or check out their other offerings
+https://www.openshift.com/products[here^]. Once you have access to a cluster, make sure you are logged in to the cluster
+as a cluster administrator before proceeding with the guide.
+Ensure you are logged in by running the following command:
 
-- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account. There are two options, 
-Starter and Pro. Use the Starter plan, which includes a free trial of the OpenShift platform with limited resources, making it perfect for individual experimentation. The Pro plan includes more resources and has a monthly fee. To sign up, go to the https://manage.openshift.com/register/plan[official website^]. Keep in mind that the creation time depends on resource availability and might take some time.
-
-- *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
-For installation instructions, refer to the official 
-https://docs.openshift.com/online/starter/cli_reference/openshift_cli/getting-started-cli.html[OpenShift Online documentation^].
-
-To verify that the OpenShift CLI is installed correctly, run the following command:
-
-[role=command]
+[role='command']
 ```
 oc version
 ```
 
-The output will be similar to:
+You should see output similar to the following:
 
-[role="no_copy"]
-----
+[role='no_copy']
+```
 Client Version: 4.3.13
 Server Version: 4.3.13
 Kubernetes Version: v1.16.2
-----
+```
+
+Before you install any resources, you need a project on your OpenShift cluster. 
+Create a project named `guide` by running the following command:
+
+[role='command']
+```
+oc new-project guide
+```
+
+Ensure that you are working within the project `guide` by running the following command:
+
+[role='command']
+```
+oc projects
+```
+
+You should see an asterisk (*) beside the project `guide`. 
 
 
 // =================================================================================================
