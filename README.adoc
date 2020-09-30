@@ -91,6 +91,7 @@ The output will be similar to:
 ----
 Client Version: 4.3.13
 Server Version: 4.3.13
+Kubernetes Version: v1.16.2
 ----
 
 
