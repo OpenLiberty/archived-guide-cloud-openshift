@@ -110,8 +110,20 @@ You should see an asterisk (*) beside the project `guide`.
 // Getting Started
 // =================================================================================================
 
-[role=command]
-include::{common-includes}/gitclone.adoc[]
+== Getting started
+
+The fastest way to work through this guide is to clone the https://github.com/openliberty/guide-{projectid}.git[Git repository^]
+into your cluster and use the projects that are provided inside:
+
+[source, role="command", subs="attributes"]
+----
+git clone https://github.com/openliberty/guide-{projectid}.git
+cd guide-{projectid}
+----
+
+The `start` directory contains the starting project that you will build upon.
+
+The `finish` directory contains the finished project that you will build.
 
 // no "try what you'll build" section in this guide since it would be too long due to all setup the user will have to do.
 
