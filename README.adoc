@@ -11,7 +11,7 @@
 :page-duration: 45 minutes 
 :page-releasedate: 2019-09-11
 :page-description: Explore how to deploy microservices to Red Hat OpenShift
-:page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
+:page-tags: ['Kubernetes', 'Cloud'] 
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
@@ -105,6 +105,16 @@ oc projects
 
 You should see an asterisk (*) beside the project `guide`. 
 
+As of Openshift 4, the Docker daemon and client are no longer supported. 
+This guide uses Podman as a container engine instead. 
+Podman is able to use images from Docker and create its own images. 
+Your cluster must have Podman installed to build the images.
+Ensure you have Podman installed by running the following command:
+
+[role='command']
+```
+podman --version
+```
 
 // =================================================================================================
 // Getting Started
@@ -173,13 +183,8 @@ The first step of deploying to {kube} is to build your microservices and contain
 
 The starting Java project, which is located in the start directory, is a multi-module Maven project. 
 It is made up of the `system` and `inventory` microservices. Each microservice resides in its own directory,
-`start/system` or `start/inventory`. Both of these directories contain a Dockerfile, which is necessary
-for building the Docker images. See the https://openliberty.io/guides/containerize.html[Containerizing microservices^] 
-guide if you're unfamiliar with Dockerfiles.
-
-If you're familiar with Maven and Docker, you might be tempted to run a Maven build first and then
-use the `.war` file to build a Docker image. The projects are set up so that this process is automated 
-as a part of a single Maven build.
+`start/system` or `start/inventory`. Both of these directories contain a Dockerfile, which is used by `podman` to build the container images. 
+See the https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide if you're unfamiliar with Dockerfiles.
 
 To build these microservices, navigate to the `start` directory and run the following command:
 
@@ -188,34 +193,40 @@ To build these microservices, navigate to the `start` directory and run the foll
 mvn package
 ```
 
-include::{common-includes}/ol-kernel-docker-pull.adoc[]
+Run the following command to download or update to the latest `openliberty/open-liberty:kernel-java8-openj9-ubi` Docker image:
 
-Next, run the `docker build` commands to build container images for your application:
 [role='command']
 ```
-docker build -t system:1.0-SNAPSHOT system/.
-docker build -t inventory:1.0-SNAPSHOT inventory/.
+podman pull openliberty/open-liberty:kernel-java8-openj9-ubi
 ```
 
-The `-t` flag in the `docker build` command allows the Docker image to be labeled (tagged) in the `name[:tag]` format. 
+Next, run the `podman build` commands to build container images for your application:
+
+[role='command']
+```
+podman build -t system:1.0-SNAPSHOT system/.
+podman build -t inventory:1.0-SNAPSHOT inventory/.
+```
+
+The `-t` flag in the `podman build` command allows the image to be labeled (tagged) in the `name[:tag]` format. 
 The tag for an image describes the specific image version. If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
 
-During the build, you see various Docker messages that describe what images are being downloaded and
-built. When the build finishes, run the following command to list all local Docker images:
+During the build, you see various messages that describe what images are being downloaded and
+built. When the build finishes, run the following command to list all local images:
 
 [role=command]
 ```
-docker images
+podman images
 ```
 
 Verify that the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images are listed among them, for example:
 
 [role="no_copy"]
 ----
-REPOSITORY                    TAG
-system                        1.0-SNAPSHOT
-inventory                     1.0-SNAPSHOT
-openliberty/open-liberty      kernel-java8-openj9-ubi
+REPOSITORY                           TAG
+localhost/inventory                  1.0-SNAPSHOT
+localhost/system                     1.0-SNAPSHOT
+docker.io/openliberty/open-liberty   kernel-java8-openj9-ubi
 ----
 
 If you don't see the `system:1.0-SNAPSHOT` and `inventory:1.0-SNAPSHOT` images, check the Maven
@@ -231,51 +242,31 @@ In order to run the microservices on the cluster, you need to push the microserv
 You will use OpenShift's integrated container image registry called OpenShift Container Registry (OCR). 
 After your images are pushed into the registry, you can use them in the pods you create later in the guide.
 
-First, you must authenticate your Docker client to your OCR. Start by running the login command:
+First you must expose the registry using the default route by running the following command to set `defaultRoute` to `True`:
 
 [role=command]
 ```
-oc registry login
+oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
 ```
 
-You can store your Docker credentials in a custom external credential store, which is more secure than using a Docker configuration file. 
-If you are using a custom credential store for securing your registry credentials, or if you are unsure where your credentials are stored, use the following command:
+You can then log in to registry using the following command:
 
-include::{common-includes}/os-tabs.adoc[]
-
-[.tab_content.mac_section.linux_section]
---
 [role=command]
 ```
-echo $(oc whoami -t) | docker login -u developer --password-stdin $(oc registry info)
+podman login -u $(oc whoami) -p $(oc whoami -t) --tls-verify=false $(oc registry info)
 ```
---
-
-[.tab_content.windows_section]
---
-Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands: 
-[role=command]
-```
-oc whoami
-oc whoami -t
-oc registry info
-```
-
-Replace the square brackets in the following `docker login` command with the results from the previous commands:
-[role=command]
-```
-docker login -u [oc whoami] -p [oc whoami -t] [oc registry info]
-```
---
 
 The command authenticates your credentials against the internal registry so that you are able to push and pull images. 
-The registry address will be displayed after you run the `oc registry login` command. It is formatted similar to the following output:
+The registry address will be displayed after you run the `podman login` command. 
+It is formatted similar to the following output:
+
 [role="no_copy"]
 ----
-default-route-openshift-image-registry.apps.[region].starter.openshift-online.com
+default-route-openshift-image-registry.apps.[region].[domain]
 ----
 
 You can also view the registry address by running the following command:
+
 [role=command]
 ```
 oc registry info
@@ -283,63 +274,19 @@ oc registry info
 
 Ensure that you are logged in to OpenShift and the registry, and run the following commands to tag your applications:
 
-include::{common-includes}/os-tabs.adoc[]
-
-[.tab_content.mac_section.linux_section]
---
 [role=command]
 ```
-docker tag system:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/system:1.0-SNAPSHOT
-docker tag inventory:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
+podman tag system:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/system:1.0-SNAPSHOT
+podman tag inventory:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
 ```
---
-
-[.tab_content.windows_section]
---
-Run the following commands:   
-[role=command]
-```
-oc registry info
-oc project -q
-```
-
-Replace the square brackets in the following `docker tag` commands with the results from the previous commands:
-[role=command]
-```
-docker tag system:1.0-SNAPSHOT [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
-docker tag inventory:1.0-SNAPSHOT [oc registry info]/[oc project -q]/inventory:1.0-SNAPSHOT
-```
---
 
 Finally, push your images to the registry:
 
-include::{common-includes}/os-tabs.adoc[]
-
-[.tab_content.mac_section.linux_section]
---
 [role=command]
 ```
-docker push $(oc registry info)/$(oc project -q)/system:1.0-SNAPSHOT
-docker push $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
+podman push --tls-verify=false $(oc registry info)/$(oc project -q)/system:1.0-SNAPSHOT
+podman push --tls-verify=false $(oc registry info)/$(oc project -q)/inventory:1.0-SNAPSHOT
 ```
---
-
-[.tab_content.windows_section]
---
-Run the following commands:
-[role=command]
-```
-oc registry info
-oc project -q
-```
-
-Replace the square brackets in the following `docker push` commands with the results from the previous commands:
-[role=command]
-```
-docker push [oc registry info]/[oc project -q]/system:1.0-SNAPSHOT
-docker push [oc registry info]/[oc project -q]/inventory:1.0-SNAPSHOT
-```
---
 
 After you push the images, run the following command to list the images that you pushed to the internal OCR:
 [role=command]
@@ -486,18 +433,16 @@ The default properties that are defined in the [hotspot]`pom.xml` file are:
 | [hotspot=inventoryIP]`inventory.ip`                   | IP or hostname of the `inventory-service` {kube} Service
 |===
 
-Use the following command to run the integration tests against your cluster. Substitute 
-`[region]` and `[project-name]` with the appropriate values:
+Use the following command to run the integration tests against your cluster. 
 
 [role=command]
 ```
 mvn verify \
--Dsystem.ip=system-route-[project-name].apps.[region].starter.openshift-online.com  \
--Dinventory.ip=inventory-route-[project-name].apps.[region].starter.openshift-online.com
+-Dsystem.ip=$(oc get route system-route -o=jsonpath='{.spec.host}')  \
+-Dinventory.ip=$(oc get route inventory-route -o=jsonpath='{.spec.host}')
 ```
 
-- The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
-- The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
+The `system.ip` and `inventory.ip` parameters are replaced with the appropriate hostnames to access the respective microservices.
 
 If the tests pass, you see an output for each service similar to the following example:
 
