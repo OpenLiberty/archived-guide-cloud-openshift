@@ -160,6 +160,7 @@ To build these microservices, navigate to the `start` directory and run the foll
 
 [role=command]
 ```
+cd start
 mvn package
 ```
 
