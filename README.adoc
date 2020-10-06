@@ -13,7 +13,7 @@
 :page-description: Explore how to deploy microservices to Red Hat OpenShift
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
-:page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro', 'operator-openshift'] 
+:page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro', 'cloud-openshift-operator'] 
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
 :page-seo-title: Deploying Java microservices to Red Hat OpenShift 
@@ -41,7 +41,7 @@ Explore how to deploy microservices to Red Hat OpenShift.
 == What you'll learn 
 
 You will learn how to deploy two microservices in Open Liberty containers to an OpenShift 3 cluster.
-For deploying to an OpenShift 4 cluster, see the https://openliberty.io/guides/operator-openshift[OpenShift Operator^] guide. 
+For deploying to an OpenShift 4 cluster, see the https://openliberty.io/guides/cloud-openshift-operator.html[Cloud OpenShift Operator^] guide. 
 
 There are different cloud-based solutions for running your {kube} workloads. 
 With a cloud-based infrastructure, you can focus on developing your microservices without worrying about low-level infrastructure details for deployment. 
