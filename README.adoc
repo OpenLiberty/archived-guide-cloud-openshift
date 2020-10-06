@@ -156,7 +156,7 @@ If you're familiar with Maven and Docker, you might be tempted to run a Maven bu
 use the `.war` file to build a Docker image. The projects are set up so that this process is automated 
 as a part of a single Maven build.
 
-To build these microservices, navigate to the `start` directory and run the following command:
+Navigate to the `start` directory and build these microservices by running the following commands:
 
 [role=command]
 ```
