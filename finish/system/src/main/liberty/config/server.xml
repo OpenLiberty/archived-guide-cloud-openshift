@@ -11,5 +11,7 @@
 
   <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
 
+  <logging messageFormat="json" messageSource="message,trace,accessLog,ffdc,audit" />
+  
   <webApplication location="system.war" contextRoot="/"/>
 </server>
