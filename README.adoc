@@ -41,7 +41,7 @@ Explore how to deploy microservices to Red Hat OpenShift.
 == What you'll learn 
 
 You will learn how to deploy two microservices in Open Liberty containers to an OpenShift 3 cluster.
-For deploying to an OpenShift 4 cluster, see the https://openliberty.io/guides/cloud-openshift-operator.html[Deploying microservices to OpenShift by using Kubernetes Operators^] guide. 
+To learn how to deploy to an OpenShift 4 cluster, see the https://openliberty.io/guides/cloud-openshift-operator.html[Deploying microservices to OpenShift by using Kubernetes Operators^] guide. 
 
 There are different cloud-based solutions for running your {kube} workloads. 
 With a cloud-based infrastructure, you can focus on developing your microservices without worrying about low-level infrastructure details for deployment. 
