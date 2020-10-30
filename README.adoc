@@ -13,7 +13,7 @@
 :page-description: Explore how to deploy microservices to Red Hat OpenShift
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
-:page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro'] 
+:page-related-guides: ['kubernetes-intro', 'kubernetes-microprofile-config', 'kubernetes-microprofile-health', 'istio-intro', 'cloud-openshift-operator'] 
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
 :page-seo-title: Deploying Java microservices to Red Hat OpenShift 
@@ -40,7 +40,8 @@ Explore how to deploy microservices to Red Hat OpenShift.
 
 == What you'll learn 
 
-You will learn how to deploy two microservices in Open Liberty containers to an OpenShift cluster.
+You will learn how to deploy two microservices in Open Liberty containers to an OpenShift 3 cluster.
+To learn how to deploy to an OpenShift 4 cluster, see the https://openliberty.io/guides/cloud-openshift-operator.html[Deploying microservices to OpenShift by using Kubernetes Operators^] guide. 
 
 There are different cloud-based solutions for running your {kube} workloads. 
 With a cloud-based infrastructure, you can focus on developing your microservices without worrying about low-level infrastructure details for deployment. 
@@ -67,12 +68,16 @@ to the inventory. This process demonstrates how communication can be established
 
 Before you begin, the following additional tools need to be installed:
 
-- *Docker:* You need a containerization software for building containers. Kubernetes 
-supports various container types, but you will use Docker in this guide. For installation 
-instructions, refer to the official https://docs.docker.com/install/[Docker documentation^].
+- *Docker:* You need a containerization software for building containers. 
+Kubernetes supports various container types, but you will use Docker in this guide. 
+For installation instructions, refer to the official https://docs.docker.com/install/[Docker documentation^].
 
 - *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account. There are two options, 
-Starter and Pro. Use the Starter plan, which includes a free trial of the OpenShift platform with limited resources, making it perfect for individual experimentation. The Pro plan includes more resources and has a monthly fee. To sign up, go to the https://manage.openshift.com/register/plan[official website^]. Keep in mind that the creation time depends on resource availability and might take some time.
+Starter and Pro. 
+Use the Starter plan, which includes a free trial of the OpenShift platform with limited resources, making it perfect for individual experimentation. 
+The Pro plan includes more resources and has a monthly fee. 
+To sign up, go to the https://manage.openshift.com/register/plan[official website^]. 
+Keep in mind that the creation time depends on resource availability and might take some time.
 
 - *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
