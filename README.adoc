@@ -131,7 +131,7 @@ Create a project by running the following command:
 
 [role=command]
 ```
-oc new-project [project-name]
+oc new-project guide
 ```
 
 // =================================================================================================
