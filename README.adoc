@@ -70,7 +70,7 @@ Before you begin, the following additional tools need to be installed:
 
 - *Docker:* You need a containerization software for building containers. 
 Kubernetes supports various container types, but you will use Docker in this guide. 
-For installation instructions, refer to the official https://docs.docker.com/install/[Docker documentation^].
+For installation instructions, refer to the official https://docs.docker.com/get-docker/[Docker documentation^].
 
 - *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account. There are two options, 
 Starter and Pro. 
