@@ -78,6 +78,7 @@ Use the Starter plan, which includes a free trial of the OpenShift platform with
 The Pro plan includes more resources and has a monthly fee. 
 To sign up, go to the https://manage.openshift.com/register/plan[official website^]. 
 Keep in mind that the creation time depends on resource availability and might take some time.
+You can also use the https://learn.openshift.com/playgrounds/openshift311/[online playground^], which provides free access to an OpenShift cluster for 60 minutes. 
 
 - *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
