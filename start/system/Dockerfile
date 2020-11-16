@@ -17,8 +17,8 @@ LABEL \
   description="This image contains the system microservice running with the Open Liberty runtime."
 
 COPY src/main/liberty/config /config/
-RUN chown -R 1001:0 /config/
+RUN sudo chown -R 1001:0 /config/
 COPY target/system.war /config/apps
-RUN chwon -R 1001:0 /config/apps
+RUN sudo chwon -R 1001:0 /config/apps
 
 RUN configure.sh
