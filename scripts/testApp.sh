@@ -3,7 +3,7 @@ set -euxo pipefail
 
 ##############################################################################
 ##
-##  Travis CI test script
+##  GH actions CI test script
 ##
 ##############################################################################
 
@@ -20,9 +20,9 @@ sleep 120
 
 kubectl get pods
 
-GUIDE_IP=`minikube ip`
-GUIDE_SYSTEM_PORT=`kubectl get service system-service -o jsonpath="{.spec.ports[0].nodePort}"`
-GUIDE_INVENTORY_PORT=`kubectl get service inventory-service -o jsonpath="{.spec.ports[0].nodePort}"`
+GUIDE_IP=$(minikube ip)
+GUIDE_SYSTEM_PORT=$(kubectl get service system-service -o jsonpath="{.spec.ports[0].nodePort}")
+GUIDE_INVENTORY_PORT=$(kubectl get service inventory-service -o jsonpath="{.spec.ports[0].nodePort}")
 
 curl http://$GUIDE_IP:$GUIDE_SYSTEM_PORT/system/properties
 
