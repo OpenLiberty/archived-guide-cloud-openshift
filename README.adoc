@@ -427,7 +427,7 @@ oc get routes
 ```
 
 They can also be found in the web console by following the `Networking > Routes > Location` path. 
-Hostnames are in the `inventory-route-[project-name].apps.[region].starter.openshift-online.com` format. Ensure that
+Hostnames are in the `inventory-route-guide.apps.[region].starter.openshift-online.com` format. Ensure that
 you are in your project, not the `default` project, which is shown in the upper-left corner of the web console.
 
 To access your microservices, point your browser to the following URLs. Substitute the appropriate hostnames
@@ -468,13 +468,13 @@ The default properties that are defined in the [hotspot]`pom.xml` file are:
 |===
 
 Use the following command to run the integration tests against your cluster. Substitute 
-`[region]` and `[project-name]` with the appropriate values:
+`[region]` with the appropriate values:
 
 [role=command]
 ```
 mvn verify \
--Dsystem.ip=system-route-[project-name].apps.[region].starter.openshift-online.com  \
--Dinventory.ip=inventory-route-[project-name].apps.[region].starter.openshift-online.com
+-Dsystem.ip=system-route-guide.apps.[region].starter.openshift-online.com  \
+-Dinventory.ip=inventory-route-guide.apps.[region].starter.openshift-online.com
 ```
 
 - The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
@@ -534,7 +534,7 @@ Finally, you can delete the project by running the following command:
 
 [role='command']
 ```
-oc delete project [project-name]
+oc delete project guide
 ```
 
 // =================================================================================================
