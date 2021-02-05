@@ -1,4 +1,4 @@
-// Copyright (c) 2019, 2020 IBM Corporation and others.
+// Copyright (c) 2019, 2021 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -50,7 +50,8 @@ Using a cloud helps you to easily scale and manage your microservices in a high-
 {kube} is an open source container orchestrator that automates many tasks that are involved in deploying, managing, and scaling containerized applications. 
 If you would like to learn more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^] guide.
 
-OpenShift is a Kubernetes-based platform with added functions. It streamlines the DevOps process by providing an intuitive development pipeline. 
+OpenShift is a Kubernetes-based platform with added functions. 
+It streamlines the DevOps process by providing an intuitive development pipeline. 
 It also provides integration with multiple tools to make the deployment and management of cloud applications easier.
 To learn more about the different platforms that Red Hat OpenShift offers, check out their https://docs.openshift.com[official documentation^]. 
 
@@ -72,8 +73,8 @@ Before you begin, the following additional tools need to be installed:
 Kubernetes supports various container types, but you will use Docker in this guide. 
 For installation instructions, refer to the official https://docs.docker.com/get-docker/[Docker documentation^].
 
-- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account. There are two options, 
-Starter and Pro. 
+- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account. 
+There are two options, Starter and Pro. 
 Use the Starter plan, which includes a free trial of the OpenShift platform with limited resources, making it perfect for individual experimentation. 
 The Pro plan includes more resources and has a monthly fee. 
 To sign up, go to the https://manage.openshift.com/register/plan[official website^]. 
@@ -179,7 +180,8 @@ docker build -t inventory:1.0-SNAPSHOT inventory/.
 ```
 
 The `-t` flag in the `docker build` command allows the Docker image to be labeled (tagged) in the `name[:tag]` format. 
-The tag for an image describes the specific image version. If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
+The tag for an image describes the specific image version. 
+If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
 
 During the build, you see various Docker messages that describe what images are being downloaded and
 built. When the build finishes, run the following command to list all local Docker images:
@@ -250,7 +252,8 @@ docker login -u [oc whoami] -p [oc whoami -t] [oc registry info]
 --
 
 The command authenticates your credentials against the internal registry so that you are able to push and pull images. 
-The registry address will be displayed after you run the `oc registry login` command. It is formatted similar to the following output:
+The registry address will be displayed after you run the `oc registry login` command. 
+It is formatted similar to the following output:
 [role="no_copy"]
 ----
 default-route-openshift-image-registry.apps.[region].starter.openshift-online.com
@@ -436,12 +439,12 @@ for the `system` and `inventory` services:
 - `http://[system-hostname]/system/properties/`
 - `http://[inventory-hostname]/inventory/systems`
 
-In the first URL, you see a result in JSON format with the system properties of the container JVM. The second URL returns an empty list, 
-which is expected because no system properties are stored in the inventory yet.
+In the first URL, you see a result in JSON format with the system properties of the container JVM. 
+The second URL returns an empty list, which is expected because no system properties are stored in the inventory yet.
 
-Point your browser to the `http://[inventory-hostname]/inventory/systems/[system-hostname]` URL. When you to go this URL, the system
-properties that are taken from the `system` service are automatically stored in the inventory. Revisit the 
-`http://[inventory-hostname]/inventory/systems` URL and you see a new entry.
+Point your browser to the `http://[inventory-hostname]/inventory/systems/[system-hostname]` URL. 
+When you to go this URL, the system properties that are taken from the `system` service are automatically stored in the inventory. 
+Revisit the `http://[inventory-hostname]/inventory/systems` URL and you see a new entry.
 
 // =================================================================================================
 // Testing the microservices
