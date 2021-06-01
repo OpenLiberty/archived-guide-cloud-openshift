@@ -1,4 +1,4 @@
-// Copyright (c) 2019, 2020 IBM Corporation and others.
+// Copyright (c) 2019, 2021 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -41,18 +41,23 @@ Explore how to deploy microservices to Red Hat OpenShift.
 == What you'll learn 
 
 You will learn how to deploy two microservices in Open Liberty containers to an OpenShift 3 cluster.
-To learn how to deploy to an OpenShift 4 cluster, see the https://openliberty.io/guides/cloud-openshift-operator.html[Deploying microservices to OpenShift by using Kubernetes Operators^] guide. 
+To learn how to deploy to an OpenShift 4 cluster,
+see the https://openliberty.io/guides/cloud-openshift-operator.html[Deploying microservices to OpenShift by using Kubernetes Operators^] guide. 
 
 There are different cloud-based solutions for running your {kube} workloads. 
 With a cloud-based infrastructure, you can focus on developing your microservices without worrying about low-level infrastructure details for deployment. 
 Using a cloud helps you to easily scale and manage your microservices in a high-availability setup.
 
-{kube} is an open source container orchestrator that automates many tasks that are involved in deploying, managing, and scaling containerized applications. 
-If you would like to learn more about Kubernetes, check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^] guide.
+{kube} is an open source container orchestrator that automates many tasks that are involved in deploying,
+managing, and scaling containerized applications. 
+If you would like to learn more about Kubernetes,
+check out the https://openliberty.io/guides/kubernetes-intro.html[Deploying microservices to Kubernetes^] guide.
 
-OpenShift is a Kubernetes-based platform with added functions. It streamlines the DevOps process by providing an intuitive development pipeline. 
+OpenShift is a Kubernetes-based platform with added functions.
+It streamlines the DevOps process by providing an intuitive development pipeline. 
 It also provides integration with multiple tools to make the deployment and management of cloud applications easier.
-To learn more about the different platforms that Red Hat OpenShift offers, check out their https://docs.openshift.com[official documentation^]. 
+To learn more about the different platforms that Red Hat OpenShift offers,
+check out their https://docs.openshift.com[official documentation^]. 
 
 The two microservices you will deploy are called `system` and `inventory`. 
 The `system` microservice returns the JVM system properties of the running container. 
@@ -68,18 +73,19 @@ to the inventory. This process demonstrates how communication can be established
 
 Before you begin, the following additional tools need to be installed:
 
-- *Docker:* You need a containerization software for building containers. 
+* *Docker:* You need a containerization software for building containers. 
 Kubernetes supports various container types, but you will use Docker in this guide. 
 For installation instructions, refer to the official https://docs.docker.com/install/[Docker documentation^].
 
-- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account. There are two options, 
-Starter and Pro. 
-Use the Starter plan, which includes a free trial of the OpenShift platform with limited resources, making it perfect for individual experimentation. 
+* *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account.
+There are two options, Starter and Pro. 
+Use the Starter plan, which includes a free trial of the OpenShift platform with limited resources,
+making it perfect for individual experimentation. 
 The Pro plan includes more resources and has a monthly fee. 
 To sign up, go to the https://manage.openshift.com/register/plan[official website^]. 
 Keep in mind that the creation time depends on resource availability and might take some time.
 
-- *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
+* *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
 https://docs.openshift.com/online/starter/cli_reference/openshift_cli/getting-started-cli.html[OpenShift Online documentation^].
 
@@ -179,7 +185,8 @@ docker build -t inventory:1.0-SNAPSHOT inventory/.
 ```
 
 The `-t` flag in the `docker build` command allows the Docker image to be labeled (tagged) in the `name[:tag]` format. 
-The tag for an image describes the specific image version. If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
+The tag for an image describes the specific image version.
+If the optional `[:tag]` tag is not specified, the `latest` tag is created by default.
 
 During the build, you see various Docker messages that describe what images are being downloaded and
 built. When the build finishes, run the following command to list all local Docker images:
@@ -208,7 +215,8 @@ build log for any potential errors.
 
 === Pushing the images to OpenShift's internal registry
 
-In order to run the microservices on the cluster, you need to push the microservice images into a container image registry. 
+In order to run the microservices on the cluster,
+you need to push the microservice images into a container image registry. 
 You will use OpenShift's integrated container image registry called OpenShift Container Registry (OCR). 
 After your images are pushed into the registry, you can use them in the pods you create later in the guide.
 
@@ -219,8 +227,10 @@ First, you must authenticate your Docker client to your OCR. Start by running th
 oc registry login
 ```
 
-You can store your Docker credentials in a custom external credential store, which is more secure than using a Docker configuration file. 
-If you are using a custom credential store for securing your registry credentials, or if you are unsure where your credentials are stored, use the following command:
+You can store your Docker credentials in a custom external credential store,
+which is more secure than using a Docker configuration file. 
+If you are using a custom credential store for securing your registry credentials,
+or if you are unsure where your credentials are stored, use the following command:
 
 include::{common-includes}/os-tabs.adoc[]
 
@@ -234,7 +244,8 @@ echo $(oc whoami -t) | docker login -u developer --password-stdin $(oc registry 
 
 [.tab_content.windows_section]
 --
-Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux, run the following commands: 
+Because the Windows command prompt doesn’t support the command substitution that is displayed for Mac and Linux,
+run the following commands: 
 [role=command]
 ```
 oc whoami
@@ -250,7 +261,8 @@ docker login -u [oc whoami] -p [oc whoami -t] [oc registry info]
 --
 
 The command authenticates your credentials against the internal registry so that you are able to push and pull images. 
-The registry address will be displayed after you run the `oc registry login` command. It is formatted similar to the following output:
+The registry address will be displayed after you run the `oc registry login` command.
+It is formatted similar to the following output:
 [role="no_copy"]
 ----
 default-route-openshift-image-registry.apps.[region].starter.openshift-online.com
@@ -433,15 +445,16 @@ you are in your project, not the `default` project, which is shown in the upper-
 To access your microservices, point your browser to the following URLs. Substitute the appropriate hostnames
 for the `system` and `inventory` services:
 
-- `http://[system-hostname]/system/properties/`
-- `http://[inventory-hostname]/inventory/systems`
+* `http://[system-hostname]/system/properties/`
+* `http://[inventory-hostname]/inventory/systems`
 
-In the first URL, you see a result in JSON format with the system properties of the container JVM. The second URL returns an empty list, 
-which is expected because no system properties are stored in the inventory yet.
+In the first URL, you see a result in JSON format with the system properties of the container JVM.
+The second URL returns an empty list, which is expected because no system properties are stored in the inventory yet.
 
-Point your browser to the `http://[inventory-hostname]/inventory/systems/[system-hostname]` URL. When you to go this URL, the system
-properties that are taken from the `system` service are automatically stored in the inventory. Revisit the 
-`http://[inventory-hostname]/inventory/systems` URL and you see a new entry.
+Point your browser to the `http://[inventory-hostname]/inventory/systems/[system-hostname]` URL.
+When you to go this URL, the system properties that are taken from the `system`
+service are automatically stored in the inventory.
+Revisit the `http://[inventory-hostname]/inventory/systems` URL and you see a new entry.
 
 // =================================================================================================
 // Testing the microservices
@@ -477,8 +490,8 @@ mvn verify \
 -Dinventory.ip=inventory-route-[project-name].apps.[region].starter.openshift-online.com
 ```
 
-- The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
-- The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
+* The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
+* The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
 
 If the tests pass, you see an output for each service similar to the following example:
 
