@@ -68,18 +68,18 @@ to the inventory. This process demonstrates how communication can be established
 
 Before you begin, the following additional tools need to be installed:
 
-- *Docker:* You need a containerization software for building containers. 
+* *Docker:* You need a containerization software for building containers. 
 Kubernetes supports various container types, but you will use Docker in this guide. 
 For installation instructions, refer to the official https://docs.docker.com/install/[Docker documentation^].
 
-- *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account. There are two options, 
+* *OpenShift account:* To access a {kube} cluster, you must sign up for a Red Hat OpenShift Online account. There are two options, 
 Starter and Pro. 
 Use the Starter plan, which includes a free trial of the OpenShift platform with limited resources, making it perfect for individual experimentation. 
 The Pro plan includes more resources and has a monthly fee. 
 To sign up, go to the https://manage.openshift.com/register/plan[official website^]. 
 Keep in mind that the creation time depends on resource availability and might take some time.
 
-- *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
+* *OpenShift CLI:* You need the OpenShift command-line tool `oc` to interact with your {kube} cluster.
 For installation instructions, refer to the official 
 https://docs.openshift.com/online/starter/cli_reference/openshift_cli/getting-started-cli.html[OpenShift Online documentation^].
 
@@ -433,8 +433,8 @@ you are in your project, not the `default` project, which is shown in the upper-
 To access your microservices, point your browser to the following URLs. Substitute the appropriate hostnames
 for the `system` and `inventory` services:
 
-- `http://[system-hostname]/system/properties/`
-- `http://[inventory-hostname]/inventory/systems`
+* `http://[system-hostname]/system/properties/`
+* `http://[inventory-hostname]/inventory/systems`
 
 In the first URL, you see a result in JSON format with the system properties of the container JVM. The second URL returns an empty list, 
 which is expected because no system properties are stored in the inventory yet.
@@ -477,8 +477,8 @@ mvn verify \
 -Dinventory.ip=inventory-route-[project-name].apps.[region].starter.openshift-online.com
 ```
 
-- The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
-- The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
+* The `system.ip` parameter is replaced with the appropriate hostname to access your system microservice.
+* The `inventory.ip` parameter is replaced with the appropriate hostname to access your inventory microservice.
 
 If the tests pass, you see an output for each service similar to the following example:
 
