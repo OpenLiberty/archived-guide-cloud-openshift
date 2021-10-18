@@ -360,7 +360,7 @@ include::finish/kubernetes.yaml[]
 
 [role="code_command hotspot", subs="quotes"]
 ----
-#Update the `kubernetes.yaml` file.#
+#Update the `kubernetes.yaml` file in the `start` directory.#
 `kubernetes.yaml`
 ----
 
