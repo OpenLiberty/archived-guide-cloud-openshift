@@ -3,6 +3,7 @@ while getopts t:d: flag; do
     case "${flag}" in
     t) DATE="${OPTARG}" ;;
     d) DRIVER="${OPTARG}" ;;
+    *) echo "Invalid option";;
     esac
 done
 
