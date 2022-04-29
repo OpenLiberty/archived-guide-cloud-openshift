@@ -5,6 +5,7 @@ while getopts t:d:b:u: flag; do
     d) DRIVER="${OPTARG}" ;;
     b) BUILD="${OPTARG}" ;;
     u) DOCKER_USERNAME="${OPTARG}" ;;
+    *) echo "Invalid option";;
     esac
 done
 
