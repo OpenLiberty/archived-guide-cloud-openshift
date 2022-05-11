@@ -12,7 +12,7 @@ mvn -Dhttp.keepAlive=false \
     -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
     -q clean package
 
-docker pull icr.io/appcafe/open-liberty:full-java11-openj9-ubi
+docker pull icr.io/appcafe/open-liberty:full-java8-openj9-ubi
 
 docker build -t system:test system/.
 docker build -t inventory:test inventory/.
