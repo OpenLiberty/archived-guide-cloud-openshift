@@ -16,6 +16,11 @@ spec:
       containers:
       - name: system-container
         image: image-registry.openshift-image-registry.svc:5000/[project-name]/system:1.0-SNAPSHOT
+        env:
+          - name: WLP_LOGGING_MESSAGE_FORMAT
+            value: "json"
+          - name: WLP_LOGGING_MESSAGE_SOURCE
+            value: "message,trace,accessLog,ffdc,audit"
         ports:
         - containerPort: 9080
 --- 
@@ -37,6 +42,11 @@ spec:
       containers:
       - name: inventory-container
         image: image-registry.openshift-image-registry.svc:5000/[project-name]/inventory:1.0-SNAPSHOT
+        env:
+          - name: WLP_LOGGING_MESSAGE_FORMAT
+            value: "json"
+          - name: WLP_LOGGING_MESSAGE_SOURCE
+            value: "message,trace,accessLog,ffdc,audit"
         ports:
         - containerPort: 9080
 ---
